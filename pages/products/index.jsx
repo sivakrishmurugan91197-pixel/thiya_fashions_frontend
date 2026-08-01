@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+
 export default function Products() {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -16,8 +18,8 @@ export default function Products() {
         const fetchData = async () => {
             try {
                 const [prodRes, catRes] = await Promise.all([
-                    axios.get('http://localhost:3000/api/thiya/products?activeOnly=true'),
-                    axios.get('http://localhost:3000/api/thiya/categories/active')
+                    axios.get(`${API_URL}/api/thiya/products?activeOnly=true`),
+                    axios.get(`${API_URL}/api/thiya/categories/active`)
                 ]);
                 
                 if (prodRes.data.is_success) {

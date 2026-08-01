@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+
 export default function AdminProducts() {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -33,8 +35,8 @@ export default function AdminProducts() {
         setLoading(true);
         try {
             const [prodRes, catRes] = await Promise.all([
-                axios.get('http://localhost:3000/api/thiya/products'),
-                axios.get('http://localhost:3000/api/thiya/categories/active')
+                axios.get(`${API_URL}/api/thiya/products`),
+                axios.get(`${API_URL}/api/thiya/categories/active`)
             ]);
             
             if (prodRes.data.is_success) setProducts(prodRes.data.data);
@@ -98,7 +100,7 @@ export default function AdminProducts() {
         });
 
         try {
-            const response = await axios.post('http://localhost:3000/api/thiya/products', formData, {
+            const response = await axios.post(`${API_URL}/api/thiya/products`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             

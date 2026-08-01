@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+
 export default function AdminReports() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -11,7 +13,7 @@ export default function AdminReports() {
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/api/thiya/reports');
+            const response = await axios.get(`${API_URL}/api/thiya/reports`);
             if (response.data.is_success) {
                 setOrders(response.data.data);
             }

@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+
 export default function ProductDetails() {
     const router = useRouter();
     const { id } = router.query;
@@ -27,7 +29,7 @@ export default function ProductDetails() {
         if (!id) return;
         const fetchProduct = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/thiya/products/${id}`);
+                const response = await axios.get(`${API_URL}/api/thiya/products/${id}`);
                 if (response.data.is_success) {
                     const prod = response.data.data;
                     setProduct(prod);
@@ -73,7 +75,7 @@ export default function ProductDetails() {
         }
 
         try {
-            const orderResponse = await axios.post('http://localhost:3000/api/thiya/orders', {
+            const orderResponse = await axios.post(`${API_URL}/api/thiya/orders`, {
                 product_id: product.id,
                 ...checkoutForm,
                 quantity
@@ -89,7 +91,7 @@ export default function ProductDetails() {
 
             // Handle mock orders locally without launching Razorpay widget
             if (razorpay_order_id.startsWith('mock_')) {
-                const verifyRes = await axios.post('http://localhost:3000/api/thiya/orders/verify', {
+                const verifyRes = await axios.post(`${API_URL}/api/thiya/orders/verify`, {
                     razorpay_payment_id: 'mock_payment_' + Date.now(),
                     razorpay_order_id: razorpay_order_id,
                     razorpay_signature: 'mock_signature',
@@ -114,7 +116,7 @@ export default function ProductDetails() {
                 order_id: razorpay_order_id,
                 handler: async function (response) {
                     try {
-                        const verifyRes = await axios.post('http://localhost:3000/api/thiya/orders/verify', {
+                        const verifyRes = await axios.post(`${API_URL}/api/thiya/orders/verify`, {
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_signature: response.razorpay_signature,

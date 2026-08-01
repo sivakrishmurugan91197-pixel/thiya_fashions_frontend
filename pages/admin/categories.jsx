@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+
 export default function AdminCategories() {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -16,7 +18,7 @@ export default function AdminCategories() {
 
     const fetchCategories = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/api/thiya/categories');
+            const response = await axios.get(`${API_URL}/api/thiya/categories`);
             if (response.data.is_success) {
                 setCategories(response.data.data);
             }
@@ -46,7 +48,7 @@ export default function AdminCategories() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/api/thiya/categories', formData);
+            const response = await axios.post(`${API_URL}/api/thiya/categories`, formData);
             if (response.data.is_success) {
                 alert('Category added successfully!');
                 setFormData({ name: '', status: 'active', menu: 'women' });
