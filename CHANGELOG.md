@@ -24,6 +24,7 @@ All changes made to clean up, configure, and optimize the frontend web applicati
 - Modified list containers in `categories.jsx`, `products.jsx`, and `reports.jsx` by wrapping tables in scrollable block elements (`overflow-x-auto`) to enable swipe-scrolling on iOS & Android screens.
 - Responsive design styling added to `pages/admin/login.jsx` card layout.
 - Switched default design accent colors from blue (`text-blue-600`) to pink (`text-pink-600`) in `ThiyaLayout.jsx` and `pages/index.jsx` to match the brand identity.
+- Updated `pages/products/[id].jsx` to hide the size selector widget entirely if no sizes are defined for the product (e.g. Sarees), defaulting the order size label to 'Standard'.
 
 ### Removed
 - Deleted unused Taskily project manager dashboard folder (`pages/dashboard/`).
