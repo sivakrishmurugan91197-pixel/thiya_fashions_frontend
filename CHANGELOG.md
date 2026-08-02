@@ -14,15 +14,14 @@ All changes made to clean up, configure, and optimize the frontend web applicati
 - Created a dedicated order confirmation success page (`pages/order-success.jsx`) featuring a pink brand header accent, animated bouncing checkmark, item descriptions, and transaction/payment details.
 - Integrated Size Enabled config dropdown in Categories admin page and configured Products admin form to dynamically show/hide the "Size Variants" text field depending on the selected category's size status.
 - Added a floating green pulsing WhatsApp chat widget linked directly to wa.me/919361356409 in the global storefront layout.
+- Added Home page link to navigation bar header and footer quick links.
 - Updated `pages/products/[id].jsx` to redirect to the `/order-success` page upon checkout verification.
 
 ### Changed
 - Refactored all storefront pages to dynamically fetch the backend URL from `process.env.NEXT_PUBLIC_API_URL` instead of hardcoded `http://localhost:3000` links:
-  - `pages/products/[id].jsx`
-  - `pages/products/index.jsx`
-  - `pages/admin/categories.jsx`
-  - `pages/admin/products.jsx`
-  - `pages/admin/reports.jsx`
+  - Updated storefront layout, admin reports, categories page, checkout processes, and product detail screens.
+- Updated logo button link target from `/products` (Shop) to `/` (Home) across both desktop and mobile headers.
+- Shifted all storefront accent styling from default blue highlights to Thiya Fashions' signature pink color system (`#db2777`/`#ec4899`).
 - Reconfigured local `.env.local` file to override the API URL to `http://localhost:3000` for offline dev mode.
 - Adjusted container paddings on all administration panels to scale cleanly on smaller device screens.
 - Modified list containers in `categories.jsx`, `products.jsx`, and `reports.jsx` by wrapping tables in scrollable block elements (`overflow-x-auto`) to enable swipe-scrolling on iOS & Android screens.
