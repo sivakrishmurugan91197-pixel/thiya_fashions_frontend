@@ -72,7 +72,7 @@ export default function AdminReports() {
                 </div>
             </div>
 
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-neutral-200">
+            <div className="bg-white p-4 sm:p-8 rounded-xl shadow-sm border border-neutral-200">
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-lg font-black tracking-tight text-neutral-900 uppercase">Recent Transactions</h2>
                 </div>
@@ -84,7 +84,7 @@ export default function AdminReports() {
                 ) : orders.length === 0 ? (
                     <p className="text-neutral-500 text-center py-12 font-medium">No orders found.</p>
                 ) : (
-                    <div className="overflow-hidden ring-1 ring-neutral-200 rounded-lg">
+                    <div className="overflow-x-auto ring-1 ring-neutral-200 rounded-lg">
                         <table className="min-w-full divide-y divide-neutral-200">
                             <thead className="bg-neutral-50">
                                 <tr>

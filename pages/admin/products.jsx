@@ -121,7 +121,7 @@ export default function AdminProducts() {
     return (
         <AdminLayout title="Product Management">
             {/* Header section */}
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <h2 className="text-lg font-black tracking-tight text-neutral-900 uppercase">Current Catalog</h2>
                 <button 
                     onClick={() => setIsModalOpen(true)}
@@ -133,7 +133,7 @@ export default function AdminProducts() {
             </div>
 
             {/* Product List */}
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-neutral-200">
+            <div className="bg-white p-4 sm:p-8 rounded-xl shadow-sm border border-neutral-200">
                 {loading ? (
                     <div className="flex justify-center py-12">
                         <div className="w-8 h-8 border-t-2 border-black border-solid rounded-full animate-spin"></div>
@@ -145,7 +145,7 @@ export default function AdminProducts() {
                         <p className="text-neutral-400 text-sm mt-1">Get started by adding your first product to the catalog.</p>
                     </div>
                 ) : (
-                    <div className="overflow-hidden ring-1 ring-neutral-200 rounded-lg">
+                    <div className="overflow-x-auto ring-1 ring-neutral-200 rounded-lg">
                         <table className="min-w-full divide-y divide-neutral-200">
                             <thead className="bg-neutral-50">
                                 <tr>
