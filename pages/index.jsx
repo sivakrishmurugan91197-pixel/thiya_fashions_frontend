@@ -44,7 +44,7 @@ export default function Home() {
             <div className="bg-white py-24 sm:py-32">
                 <div className="mx-auto max-w-7xl px-6 lg:px-8">
                     <div className="mx-auto max-w-2xl lg:text-center">
-                        <h2 className="text-base font-bold leading-7 text-blue-600 uppercase tracking-widest">Thiya Fashions Exclusive</h2>
+                        <h2 className="text-base font-bold leading-7 text-pink-600 uppercase tracking-widest">Thiya Fashions Exclusive</h2>
                         <p className="mt-2 text-3xl font-black tracking-tight text-gray-900 sm:text-4xl">
                             Everything you need to look your best
                         </p>
@@ -57,7 +57,7 @@ export default function Home() {
                         <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
                             <div className="relative pl-16 group">
                                 <dt className="text-xl font-bold leading-7 text-gray-900">
-                                    <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-lg bg-black text-white group-hover:bg-blue-600 transition-colors">
+                                    <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-lg bg-black text-white group-hover:bg-pink-600 transition-colors">
                                         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
                                           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                                         </svg>
@@ -68,7 +68,7 @@ export default function Home() {
                             </div>
                             <div className="relative pl-16 group">
                                 <dt className="text-xl font-bold leading-7 text-gray-900">
-                                    <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-lg bg-black text-white group-hover:bg-blue-600 transition-colors">
+                                    <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-lg bg-black text-white group-hover:bg-pink-600 transition-colors">
                                         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                                         </svg>
@@ -79,7 +79,7 @@ export default function Home() {
                             </div>
                             <div className="relative pl-16 group">
                                 <dt className="text-xl font-bold leading-7 text-gray-900">
-                                    <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-lg bg-black text-white group-hover:bg-blue-600 transition-colors">
+                                    <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-lg bg-black text-white group-hover:bg-pink-600 transition-colors">
                                         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
                                           <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
                                         </svg>
@@ -90,7 +90,7 @@ export default function Home() {
                             </div>
                             <div className="relative pl-16 group">
                                 <dt className="text-xl font-bold leading-7 text-gray-900">
-                                    <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-lg bg-black text-white group-hover:bg-blue-600 transition-colors">
+                                    <div className="absolute left-0 top-0 flex h-12 w-12 items-center justify-center rounded-lg bg-black text-white group-hover:bg-pink-600 transition-colors">
                                         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
                                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
                                         </svg>
@@ -110,7 +110,7 @@ export default function Home() {
                 <h2 className="text-3xl font-black tracking-tight text-gray-900 sm:text-4xl">
                   Ready to upgrade your wardrobe?
                   <br />
-                  <span className="text-blue-600">Start exploring our collection today.</span>
+                  <span className="text-pink-600">Start exploring our collection today.</span>
                 </h2>
                 <div className="mt-10 flex items-center gap-x-6 lg:mt-0 lg:flex-shrink-0">
                   <Link
@@ -119,7 +119,7 @@ export default function Home() {
                   >
                     View All Products
                   </Link>
-                  <Link href="/contact" className="text-sm font-bold leading-6 text-gray-900 hover:text-blue-600 transition-colors">
+                  <Link href="/contact" className="text-sm font-bold leading-6 text-gray-900 hover:text-pink-600 transition-colors">
                     Contact Sales <span aria-hidden="true">→</span>
                   </Link>
                 </div>

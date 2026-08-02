@@ -6,6 +6,8 @@ All changes made to clean up, configure, and optimize the frontend web applicati
 
 ### Added
 - Created production environment configuration file `.env` to define the default production API URL pointing to the live Railway server: `https://thiyafashionsbackend-production.up.railway.app`.
+- Integrated official Thiya Fashions YouTube logo image (`/images/thiya_logo.png`) in the header and footer across the storefront.
+- Updated the contact phone number in the footer to `+91 93613 56409` matching the branding.
 - Added hamburger toggle button to the top header on mobile screens to open/close the mobile sidebar.
 - Added sliding drawer responsive mobile sidebar layout inside `components/AdminLayout.jsx`.
 - Added backdrop/overlay that closes the drawer menu when clicked.
@@ -21,6 +23,7 @@ All changes made to clean up, configure, and optimize the frontend web applicati
 - Adjusted container paddings on all administration panels to scale cleanly on smaller device screens.
 - Modified list containers in `categories.jsx`, `products.jsx`, and `reports.jsx` by wrapping tables in scrollable block elements (`overflow-x-auto`) to enable swipe-scrolling on iOS & Android screens.
 - Responsive design styling added to `pages/admin/login.jsx` card layout.
+- Switched default design accent colors from blue (`text-blue-600`) to pink (`text-pink-600`) in `ThiyaLayout.jsx` and `pages/index.jsx` to match the brand identity.
 
 ### Removed
 - Deleted unused Taskily project manager dashboard folder (`pages/dashboard/`).

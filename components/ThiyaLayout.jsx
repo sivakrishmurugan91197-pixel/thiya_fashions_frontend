@@ -8,8 +8,11 @@ export default function ThiyaLayout({ children }) {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-20">
                         <div className="flex items-center">
-                            <Link href="/products" className="text-3xl font-black tracking-tighter text-black uppercase">
-                                Thiya<span className="text-blue-600">Fashions</span>
+                            <Link href="/products" className="flex items-center gap-3 group">
+                                <img src="/images/thiya_logo.png" alt="Thiya Fashions Logo" className="h-12 w-12 object-cover rounded-full shadow-md border-2 border-pink-500/20 group-hover:scale-105 transition-transform duration-200" />
+                                <span className="text-2xl font-black tracking-tighter text-black uppercase">
+                                    Thiya<span className="text-pink-600">Fashions</span>
+                                </span>
                             </Link>
                         </div>
                         <nav className="hidden md:flex space-x-8">
@@ -18,8 +21,9 @@ export default function ThiyaLayout({ children }) {
                             <Link href="/contact" className="text-neutral-600 hover:text-black transition-colors font-medium">Contact</Link>
                         </nav>
                         <div className="md:hidden">
-                            {/* Mobile menu button could go here */}
-                            <span className="text-xl font-bold">Thiya</span>
+                            <Link href="/products" className="flex items-center">
+                                <img src="/images/thiya_logo.png" alt="Thiya Fashions Logo" className="h-10 w-10 object-cover rounded-full shadow-md" />
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -35,7 +39,10 @@ export default function ThiyaLayout({ children }) {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div>
-                            <h3 className="text-2xl font-black tracking-tighter uppercase mb-4">Thiya Fashions</h3>
+                            <div className="flex items-center gap-3 mb-4">
+                                <img src="/images/thiya_logo.png" alt="Thiya Fashions Logo" className="h-10 w-10 object-cover rounded-full bg-white p-0.5" />
+                                <h3 className="text-2xl font-black tracking-tighter uppercase">Thiya Fashions</h3>
+                            </div>
                             <p className="text-neutral-400">Wholesale, Retail & Manufacture.<br/>Premium fashion for everyone.</p>
                         </div>
                         <div>
@@ -49,7 +56,7 @@ export default function ThiyaLayout({ children }) {
                         <div>
                             <h4 className="text-lg font-bold mb-4">Contact</h4>
                             <p className="text-neutral-400">Email: info@thiyafashions.com</p>
-                            <p className="text-neutral-400">Phone: +91 12345 67890</p>
+                            <p className="text-neutral-400">Phone: +91 93613 56409</p>
                         </div>
                     </div>
                     <div className="mt-12 pt-8 border-t border-neutral-800 text-center text-neutral-500">
