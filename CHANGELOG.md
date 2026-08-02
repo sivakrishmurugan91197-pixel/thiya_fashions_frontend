@@ -12,6 +12,7 @@ All changes made to clean up, configure, and optimize the frontend web applicati
 - Added sliding drawer responsive mobile sidebar layout inside `components/AdminLayout.jsx`.
 - Added backdrop/overlay that closes the drawer menu when clicked.
 - Created a dedicated order confirmation success page (`pages/order-success.jsx`) featuring a pink brand header accent, animated bouncing checkmark, item descriptions, and transaction/payment details.
+- Integrated Size Enabled config dropdown in Categories admin page and configured Products admin form to dynamically show/hide the "Size Variants" text field depending on the selected category's size status.
 - Updated `pages/products/[id].jsx` to redirect to the `/order-success` page upon checkout verification.
 
 ### Changed
