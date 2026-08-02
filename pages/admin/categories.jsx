@@ -15,6 +15,7 @@ export default function AdminCategories() {
         menu: 'women',
         size_status: true
     });
+    const [editCategory, setEditCategory] = useState(null);
     const router = useRouter();
 
     const fetchCategories = async () => {
@@ -49,16 +50,23 @@ export default function AdminCategories() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${API_URL}/api/thiya/categories`, formData);
+            let response;
+            if (editCategory) {
+                response = await axios.put(`${API_URL}/api/thiya/categories/${editCategory.id}`, formData);
+            } else {
+                response = await axios.post(`${API_URL}/api/thiya/categories`, formData);
+            }
+            
             if (response.data.is_success) {
-                alert('Category added successfully!');
+                alert(editCategory ? 'Category updated successfully!' : 'Category added successfully!');
                 setFormData({ name: '', status: 'active', menu: 'women', size_status: true });
+                setEditCategory(null);
                 setIsModalOpen(false);
                 fetchCategories();
             }
         } catch (error) {
-            console.error("Error adding category:", error);
-            alert("Failed to add category");
+            console.error("Error saving category:", error);
+            alert("Failed to save category");
         }
     };
 
@@ -68,7 +76,11 @@ export default function AdminCategories() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <h2 className="text-lg font-black tracking-tight text-neutral-900 uppercase">All Categories</h2>
                 <button 
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => {
+                        setFormData({ name: '', status: 'active', menu: 'women', size_status: true });
+                        setEditCategory(null);
+                        setIsModalOpen(true);
+                    }}
                     className="flex items-center justify-center py-2.5 px-5 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-black hover:bg-neutral-800 transition-colors uppercase tracking-widest"
                 >
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
@@ -97,6 +109,7 @@ export default function AdminCategories() {
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Status</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Sizes Enabled</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Added On</th>
+                                    <th scope="col" className="relative py-4 pl-3 pr-6 text-right text-xs font-bold text-neutral-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-neutral-200 bg-white">
@@ -127,6 +140,23 @@ export default function AdminCategories() {
                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-neutral-500">
                                             {new Date(cat.createdAt).toLocaleDateString()}
                                         </td>
+                                        <td className="whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-bold">
+                                            <button
+                                                onClick={() => {
+                                                    setEditCategory(cat);
+                                                    setFormData({
+                                                        name: cat.name,
+                                                        status: cat.status,
+                                                        menu: cat.menu || 'women',
+                                                        size_status: cat.size_status !== false
+                                                    });
+                                                    setIsModalOpen(true);
+                                                }}
+                                                className="text-pink-600 hover:text-pink-950 font-bold uppercase tracking-wider text-xs border border-pink-200 hover:border-pink-500 px-3 py-1.5 rounded transition-all bg-pink-50/50"
+                                            >
+                                                Edit
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -141,7 +171,7 @@ export default function AdminCategories() {
                     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200 border border-neutral-200">
                         <div className="bg-neutral-50 px-8 py-6 border-b border-neutral-200 flex justify-between items-center">
                             <div>
-                                <h3 className="text-xl font-black text-neutral-900 uppercase tracking-tight">Add Category</h3>
+                                <h3 className="text-xl font-black text-neutral-900 uppercase tracking-tight">{editCategory ? "Edit Category" : "Add Category"}</h3>
                             </div>
                             <button 
                                 onClick={() => setIsModalOpen(false)}
