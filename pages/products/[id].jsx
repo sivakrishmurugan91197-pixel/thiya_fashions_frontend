@@ -13,7 +13,7 @@ export default function ProductDetails() {
     
     // UI State
     const [selectedImage, setSelectedImage] = useState(0);
-    const [selectedSize, setSelectedSize] = useState('S');
+    const [selectedSize, setSelectedSize] = useState('');
     const [selectedColor, setSelectedColor] = useState('');
     const [quantity, setQuantity] = useState(1);
     
@@ -36,8 +36,10 @@ export default function ProductDetails() {
                     if (prod.colors && prod.colors.length > 0) {
                         setSelectedColor(prod.colors[0]);
                     }
-                    if (prod.size) {
+                    if (prod.size && prod.size.trim()) {
                         setSelectedSize(prod.size.split(',')[0].trim());
+                    } else {
+                        setSelectedSize('Standard');
                     }
                 }
             } catch (error) {
@@ -168,7 +170,7 @@ export default function ProductDetails() {
     const totalAmount = subtotal + gstAmount;
 
     // Default sizes if none provided
-    const sizes = product.size ? product.size.split(',').map(s => s.trim()) : ['S', 'M', 'L', 'XL'];
+    const sizes = product.size && product.size.trim() ? product.size.split(',').map(s => s.trim()).filter(Boolean) : [];
     const detailsKeys = product.details ? Object.keys(product.details) : [];
 
     return (
@@ -257,22 +259,24 @@ export default function ProductDetails() {
                             )}
 
                             {/* Size Selection */}
-                            <div className="mt-6">
-                                <div className="flex items-center justify-between mb-3">
-                                    <h3 className="text-sm font-bold text-neutral-900">Size: <span className="font-normal text-neutral-600">{selectedSize}</span></h3>
+                            {sizes.length > 0 && (
+                                <div className="mt-6">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <h3 className="text-sm font-bold text-neutral-900">Size: <span className="font-normal text-neutral-600">{selectedSize}</span></h3>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        {sizes.map((s) => (
+                                            <button 
+                                                key={s} 
+                                                onClick={() => setSelectedSize(s)}
+                                                className={`min-w-[40px] px-3 py-2 text-xs font-bold uppercase transition-all rounded ${selectedSize === s ? 'bg-neutral-900 text-white' : 'bg-white text-neutral-900 border border-neutral-300 hover:border-black'}`}
+                                            >
+                                                {s}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {sizes.map((s) => (
-                                        <button 
-                                            key={s} 
-                                            onClick={() => setSelectedSize(s)}
-                                            className={`min-w-[40px] px-3 py-2 text-xs font-bold uppercase transition-all rounded ${selectedSize === s ? 'bg-neutral-900 text-white' : 'bg-white text-neutral-900 border border-neutral-300 hover:border-black'}`}
-                                        >
-                                            {s}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+                            )}
 
                             {/* Quantity Selector */}
                             <div className="mt-6">
