@@ -12,7 +12,8 @@ export default function AdminCategories() {
     const [formData, setFormData] = useState({
         name: '',
         status: 'active',
-        menu: 'women'
+        menu: 'women',
+        size_status: true
     });
     const router = useRouter();
 
@@ -51,7 +52,7 @@ export default function AdminCategories() {
             const response = await axios.post(`${API_URL}/api/thiya/categories`, formData);
             if (response.data.is_success) {
                 alert('Category added successfully!');
-                setFormData({ name: '', status: 'active', menu: 'women' });
+                setFormData({ name: '', status: 'active', menu: 'women', size_status: true });
                 setIsModalOpen(false);
                 fetchCategories();
             }
@@ -94,6 +95,7 @@ export default function AdminCategories() {
                                     <th scope="col" className="py-4 pl-6 pr-3 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Category Name</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Menu</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Sizes Enabled</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Added On</th>
                                 </tr>
                             </thead>
@@ -113,6 +115,13 @@ export default function AdminCategories() {
                                                 cat.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                                             }`}>
                                                 {cat.status}
+                                            </span>
+                                        </td>
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm">
+                                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider ${
+                                                cat.size_status === false ? 'bg-amber-100 text-amber-800' : 'bg-pink-100 text-pink-800'
+                                            }`}>
+                                                {cat.size_status === false ? 'No' : 'Yes'}
                                             </span>
                                         </td>
                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-neutral-500">
@@ -160,6 +169,13 @@ export default function AdminCategories() {
                                     <select name="status" value={formData.status} onChange={handleChange} className="block w-full rounded-md border-0 py-3 px-4 text-neutral-900 ring-1 ring-inset ring-neutral-300 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm transition-all bg-neutral-50 uppercase tracking-wider font-bold">
                                         <option value="active">Active</option>
                                         <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2">Sizes Enabled</label>
+                                    <select name="size_status" value={formData.size_status.toString()} onChange={(e) => setFormData({ ...formData, size_status: e.target.value === 'true' })} className="block w-full rounded-md border-0 py-3 px-4 text-neutral-900 ring-1 ring-inset ring-neutral-300 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm transition-all bg-neutral-50 uppercase tracking-wider font-bold">
+                                        <option value="true">Yes (Sizing Required)</option>
+                                        <option value="false">No (One Size/e.g. Sarees)</option>
                                     </select>
                                 </div>
                                 <div className="pt-6 mt-2 border-t border-neutral-100 flex justify-end gap-3">

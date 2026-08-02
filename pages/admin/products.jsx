@@ -88,7 +88,9 @@ export default function AdminProducts() {
         formData.append('description', description);
         formData.append('price', price);
         formData.append('discount_amount', discountAmount);
-        formData.append('size', size);
+        const selectedCat = categories.find(c => c.id.toString() === categoryId.toString());
+        const isSizeEnabled = selectedCat ? (selectedCat.size_status !== false) : true;
+        formData.append('size', isSizeEnabled ? size : '');
         formData.append('status', status);
         formData.append('colors', JSON.stringify(colorList));
         formData.append('details', details);
@@ -109,6 +111,7 @@ export default function AdminProducts() {
                 // Reset form
                 setColorList([]); setStatus('active'); setDetails('');
                 setSelectedFiles([]); setPreviewUrls([]); setImageColors({});
+                setTitle(''); setDescription(''); setPrice(''); setDiscountAmount(''); setSize(''); setCategoryId('');
                 setIsModalOpen(false);
                 fetchData(); // Refresh the list
             }
@@ -269,8 +272,22 @@ export default function AdminProducts() {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2">Size Variants</label>
-                                        <input type="text" value={size} onChange={(e) => setSize(e.target.value)} placeholder="e.g. S, M, L, XL" className="block w-full rounded-md border-0 py-3 px-4 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm transition-all bg-neutral-50" />
+                                        {(() => {
+                                            const selectedCat = categories.find(c => c.id.toString() === categoryId.toString());
+                                            const isSizeEnabled = selectedCat ? (selectedCat.size_status !== false) : true;
+                                            return isSizeEnabled ? (
+                                                <>
+                                                    <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2">Size Variants</label>
+                                                    <input type="text" value={size} onChange={(e) => setSize(e.target.value)} placeholder="e.g. S, M, L, XL" className="block w-full rounded-md border-0 py-3 px-4 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm transition-all bg-neutral-50" />
+                                                </>
+                                            ) : (
+                                                <div className="flex flex-col justify-end h-full">
+                                                    <span className="text-[11px] text-neutral-500 bg-neutral-100 p-2.5 rounded border border-neutral-200 font-bold uppercase tracking-wider text-center leading-tight">
+                                                        Sizing Disabled for this Category
+                                                    </span>
+                                                </div>
+                                            );
+                                        })()}
                                     </div>
                                 </div>
                                 
