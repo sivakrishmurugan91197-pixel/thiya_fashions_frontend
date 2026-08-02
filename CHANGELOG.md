@@ -15,6 +15,7 @@ All changes made to clean up, configure, and optimize the frontend web applicati
 - Integrated Size Enabled config dropdown in Categories admin page and configured Products admin form to dynamically show/hide the "Size Variants" text field depending on the selected category's size status.
 - Added a floating green pulsing WhatsApp chat widget linked directly to wa.me/919361356409 in the global storefront layout.
 - Added Home page link to navigation bar header and footer quick links.
+- Added Thiya logo image and pink brand styled heading text to the admin portal login screen.
 - Updated `pages/products/[id].jsx` to redirect to the `/order-success` page upon checkout verification.
 
 ### Changed
