@@ -21,9 +21,14 @@ export default function AdminLogin() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-neutral-100 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8 bg-white p-6 sm:p-10 rounded-xl shadow-lg border border-neutral-200">
-                <div>
+                <div className="flex flex-col items-center">
+                    <img 
+                        src="/images/thiya_logo.png" 
+                        alt="Thiya Fashions Logo" 
+                        className="h-20 w-20 object-cover rounded-full shadow-md border-2 border-pink-500/20 mb-4" 
+                    />
                     <h2 className="mt-2 text-center text-3xl font-black tracking-tight text-gray-900 uppercase">
-                        Thiya Fashions
+                        Thiya<span className="text-pink-600">Fashions</span>
                     </h2>
                     <p className="mt-2 text-center text-sm text-gray-600 font-bold tracking-widest uppercase">
                         Admin Portal
