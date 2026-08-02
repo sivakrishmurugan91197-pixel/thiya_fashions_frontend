@@ -16,6 +16,7 @@ All changes made to clean up, configure, and optimize the frontend web applicati
 - Added a floating green pulsing WhatsApp chat widget linked directly to wa.me/919361356409 in the global storefront layout.
 - Added Home page link to navigation bar header and footer quick links.
 - Added Thiya logo image and pink brand styled heading text to the admin portal login screen.
+- Added Category editing support in the Admin category list dashboard, enabling full modifications of existing categories.
 - Updated `pages/products/[id].jsx` to redirect to the `/order-success` page upon checkout verification.
 
 ### Changed
