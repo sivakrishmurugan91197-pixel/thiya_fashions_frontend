@@ -8,7 +8,7 @@ export default function ThiyaLayout({ children }) {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-20">
                         <div className="flex items-center">
-                            <Link href="/products" className="flex items-center gap-3 group">
+                            <Link href="/" className="flex items-center gap-3 group">
                                 <img src="/images/thiya_logo.png" alt="Thiya Fashions Logo" className="h-12 w-12 object-cover rounded-full shadow-md border-2 border-pink-500/20 group-hover:scale-105 transition-transform duration-200" />
                                 <span className="text-2xl font-black tracking-tighter text-black uppercase">
                                     Thiya<span className="text-pink-600">Fashions</span>
@@ -16,12 +16,13 @@ export default function ThiyaLayout({ children }) {
                             </Link>
                         </div>
                         <nav className="hidden md:flex space-x-8">
+                            <Link href="/" className="text-neutral-600 hover:text-black transition-colors font-medium">Home</Link>
                             <Link href="/products" className="text-neutral-600 hover:text-black transition-colors font-medium">Shop</Link>
                             <Link href="/about" className="text-neutral-600 hover:text-black transition-colors font-medium">About Us</Link>
                             <Link href="/contact" className="text-neutral-600 hover:text-black transition-colors font-medium">Contact</Link>
                         </nav>
                         <div className="md:hidden">
-                            <Link href="/products" className="flex items-center">
+                            <Link href="/" className="flex items-center">
                                 <img src="/images/thiya_logo.png" alt="Thiya Fashions Logo" className="h-10 w-10 object-cover rounded-full shadow-md" />
                             </Link>
                         </div>
@@ -48,6 +49,7 @@ export default function ThiyaLayout({ children }) {
                         <div>
                             <h4 className="text-lg font-bold mb-4">Quick Links</h4>
                             <ul className="space-y-2 text-neutral-400">
+                                <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
                                 <li><Link href="/products" className="hover:text-white transition-colors">Shop</Link></li>
                                 <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
                                 <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
