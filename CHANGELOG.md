@@ -13,6 +13,7 @@ All changes made to clean up, configure, and optimize the frontend web applicati
 - Added backdrop/overlay that closes the drawer menu when clicked.
 - Created a dedicated order confirmation success page (`pages/order-success.jsx`) featuring a pink brand header accent, animated bouncing checkmark, item descriptions, and transaction/payment details.
 - Integrated Size Enabled config dropdown in Categories admin page and configured Products admin form to dynamically show/hide the "Size Variants" text field depending on the selected category's size status.
+- Added a floating green pulsing WhatsApp chat widget linked directly to wa.me/919361356409 in the global storefront layout.
 - Updated `pages/products/[id].jsx` to redirect to the `/order-success` page upon checkout verification.
 
 ### Changed
