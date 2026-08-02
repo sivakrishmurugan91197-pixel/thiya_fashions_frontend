@@ -11,7 +11,8 @@ All changes made to clean up, configure, and optimize the frontend web applicati
 - Added hamburger toggle button to the top header on mobile screens to open/close the mobile sidebar.
 - Added sliding drawer responsive mobile sidebar layout inside `components/AdminLayout.jsx`.
 - Added backdrop/overlay that closes the drawer menu when clicked.
-- Implemented a premium fullscreen Congratulations Modal with a pink-themed brand bar, animated bouncing checkmark, detailed order receipts, transaction IDs, and a Continue Shopping button.
+- Created a dedicated order confirmation success page (`pages/order-success.jsx`) featuring a pink brand header accent, animated bouncing checkmark, item descriptions, and transaction/payment details.
+- Updated `pages/products/[id].jsx` to redirect to the `/order-success` page upon checkout verification.
 
 ### Changed
 - Refactored all storefront pages to dynamically fetch the backend URL from `process.env.NEXT_PUBLIC_API_URL` instead of hardcoded `http://localhost:3000` links:
