@@ -17,9 +17,11 @@ All changes made to clean up, configure, and optimize the frontend web applicati
 - Added Home page link to navigation bar header and footer quick links.
 - Added Thiya logo image and pink brand styled heading text to the admin portal login screen.
 - Added Category editing support in the Admin category list dashboard, enabling full modifications of existing categories.
+- Created a dedicated checkout page (`pages/checkout.jsx`) featuring a two-column responsive interface for entering contact/delivery information and reviewing product price breakdowns (subtotal, 5% GST, total).
 - Updated `pages/products/[id].jsx` to redirect to the `/order-success` page upon checkout verification.
 
 ### Changed
+- Replaced the shipping info popup modal overlay on the product details page (`[id].jsx`) with a clean URL redirect to the dedicated `/checkout` page, carrying size, color, and quantity choices.
 - Refactored all storefront pages to dynamically fetch the backend URL from `process.env.NEXT_PUBLIC_API_URL` instead of hardcoded `http://localhost:3000` links:
   - Updated storefront layout, admin reports, categories page, checkout processes, and product detail screens.
 - Updated logo button link target from `/products` (Shop) to `/` (Home) across both desktop and mobile headers.
