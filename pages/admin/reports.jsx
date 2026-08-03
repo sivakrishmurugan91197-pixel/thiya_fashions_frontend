@@ -115,7 +115,18 @@ export default function AdminReports() {
                                         </td>
                                         <td className="px-3 py-4 text-sm text-neutral-700 font-medium max-w-[200px] truncate">
                                             {order.product?.title || `Product ID: ${order.product_id}`}
-                                            <div className="text-xs text-neutral-500 mt-1">Qty: {order.quantity || 1}</div>
+                                            <div className="text-xs text-neutral-500 mt-1 flex flex-wrap gap-2 items-center font-semibold">
+                                                <span>Qty: {order.quantity || 1}</span>
+                                                {order.size && <span>• Size: {order.size}</span>}
+                                                {order.color && (
+                                                    <span className="flex items-center gap-1">
+                                                        • Color: {order.color}
+                                                        {order.color.startsWith('#') && (
+                                                            <span className="w-2.5 h-2.5 rounded-full border border-black/10 inline-block" style={{ backgroundColor: order.color }}></span>
+                                                        )}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </td>
                                         <td className="whitespace-nowrap px-3 py-4">
                                             <div className="text-sm font-black text-neutral-900">₹{parseFloat(order.total_amount || order.amount_paid).toFixed(2)}</div>
@@ -189,11 +200,30 @@ export default function AdminReports() {
                                     <h4 className="text-xs font-bold text-neutral-500 uppercase tracking-widest mb-4 border-b border-neutral-100 pb-2">Product Details</h4>
                                     <div className="flex gap-4 items-center bg-neutral-50 p-4 rounded-lg border border-neutral-100 mb-6">
                                         <div className="h-16 w-16 bg-white rounded border border-neutral-200 overflow-hidden flex-shrink-0">
-                                            <img src={selectedOrder.product?.images?.[0]?.url || 'https://via.placeholder.com/64'} className="w-full h-full object-cover" />
+                                            {(() => {
+                                                const matchedImg = selectedOrder.product?.images?.find(img => img.color === selectedOrder.color);
+                                                const imgSrc = matchedImg?.url || selectedOrder.product?.images?.[0]?.url || 'https://via.placeholder.com/64';
+                                                return <img src={imgSrc} className="w-full h-full object-cover" alt="Product thumbnail" />;
+                                            })()}
                                         </div>
                                         <div>
                                             <p className="font-bold text-neutral-900 text-sm line-clamp-2">{selectedOrder.product?.title || `Product ID: ${selectedOrder.product_id}`}</p>
                                             <p className="text-xs text-neutral-500 mt-1">Qty: {selectedOrder.quantity || 1} × ₹{parseFloat(selectedOrder.amount_paid).toFixed(2)}</p>
+                                            <div className="flex flex-wrap gap-2 mt-2">
+                                                {selectedOrder.size && (
+                                                    <span className="inline-flex items-center rounded bg-neutral-250/20 px-2 py-0.5 text-xs font-bold text-neutral-600">
+                                                        Size: {selectedOrder.size}
+                                                    </span>
+                                                )}
+                                                {selectedOrder.color && (
+                                                    <span className="inline-flex items-center gap-1 rounded bg-neutral-250/20 px-2 py-0.5 text-xs font-bold text-neutral-600">
+                                                        Color: {selectedOrder.color}
+                                                        {selectedOrder.color.startsWith('#') && (
+                                                            <span className="w-2.5 h-2.5 rounded-full border border-black/10 inline-block" style={{ backgroundColor: selectedOrder.color }}></span>
+                                                        )}
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
 

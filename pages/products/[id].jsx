@@ -2,11 +2,13 @@ import ThiyaLayout from '@/components/ThiyaLayout';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useCart } from '@/contexts/CartContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 export default function ProductDetails() {
     const router = useRouter();
+    const { addToCart } = useCart();
     const { id } = router.query;
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -183,7 +185,7 @@ export default function ProductDetails() {
                             <div className="mt-8 flex flex-col gap-3">
                                 <button
                                     type="button"
-                                    onClick={() => alert("Added to cart!")}
+                                    onClick={() => addToCart(product, selectedSize, selectedColor, quantity)}
                                     className="w-full flex items-center justify-center bg-white border border-black px-8 py-3 text-sm font-bold text-black hover:bg-neutral-50 transition-colors"
                                 >
                                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
