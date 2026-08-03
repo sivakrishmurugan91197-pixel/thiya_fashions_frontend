@@ -21,6 +21,8 @@ export default function AdminProducts() {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editProduct, setEditProduct] = useState(null);
+    const [existingImages, setExistingImages] = useState([]);
     
     // Form State
     const [title, setTitle] = useState('');
@@ -41,6 +43,42 @@ export default function AdminProducts() {
     const [imageColors, setImageColors] = useState({});
     
     const router = useRouter();
+
+    const handleEditClick = (product) => {
+        setEditProduct(product);
+        setTitle(product.title || '');
+        setDescription(product.description || '');
+        setPrice(product.price || '');
+        setDiscountAmount(product.discount_amount || '');
+        setSize(product.size || '');
+        setCategoryId(product.category_id || '');
+        setStatus(product.status || 'active');
+        setColorList(product.colors || []);
+        setDetails(product.details ? JSON.stringify(product.details, null, 2) : '');
+        setExistingImages(product.images || []);
+        setSelectedFiles([]);
+        setPreviewUrls([]);
+        setImageColors({});
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setEditProduct(null);
+        setTitle('');
+        setDescription('');
+        setPrice('');
+        setDiscountAmount('');
+        setSize('');
+        setCategoryId('');
+        setStatus('active');
+        setColorList([]);
+        setDetails('');
+        setExistingImages([]);
+        setSelectedFiles([]);
+        setPreviewUrls([]);
+        setImageColors({});
+    };
 
     const fetchData = async () => {
         setLoading(true);
@@ -107,6 +145,10 @@ export default function AdminProducts() {
         formData.append('details', details);
         if (categoryId) formData.append('category_id', categoryId);
         
+        if (editProduct) {
+            formData.append('existing_images', JSON.stringify(existingImages));
+        }
+        
         selectedFiles.forEach((file, index) => {
             const color = imageColors[index] || 'default';
             formData.append(`images_${color}`, file);
@@ -114,29 +156,35 @@ export default function AdminProducts() {
 
         try {
             const auth = localStorage.getItem('thiya_admin_auth');
-            const response = await axios.post(`${API_URL}/api/thiya/products`, formData, {
-                headers: { 
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${auth}`
-                }
-            });
+            let response;
+            if (editProduct) {
+                response = await axios.put(`${API_URL}/api/thiya/products/${editProduct.id}`, formData, {
+                    headers: { 
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${auth}`
+                    }
+                });
+            } else {
+                response = await axios.post(`${API_URL}/api/thiya/products`, formData, {
+                    headers: { 
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${auth}`
+                    }
+                });
+            }
             
             if (response.data.is_success) {
-                alert('Product added successfully!');
-                // Reset form
-                setColorList([]); setStatus('active'); setDetails('');
-                setSelectedFiles([]); setPreviewUrls([]); setImageColors({});
-                setTitle(''); setDescription(''); setPrice(''); setDiscountAmount(''); setSize(''); setCategoryId('');
-                setIsModalOpen(false);
+                alert(editProduct ? 'Product updated successfully!' : 'Product added successfully!');
+                handleCloseModal();
                 fetchData(); // Refresh the list
             }
         } catch (error) {
-            console.error("Error adding product:", error);
+            console.error("Error saving product:", error);
             if (error.response && error.response.status === 401) {
                 localStorage.removeItem('thiya_admin_auth');
                 router.push('/admin/login');
             } else {
-                alert("Failed to add product");
+                alert(editProduct ? "Failed to update product" : "Failed to add product");
             }
         }
     };
@@ -147,7 +195,10 @@ export default function AdminProducts() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <h2 className="text-lg font-black tracking-tight text-neutral-900 uppercase">Current Catalog</h2>
                 <button 
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => {
+                        handleCloseModal();
+                        setIsModalOpen(true);
+                    }}
                     className="flex items-center justify-center py-2.5 px-5 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-black hover:bg-neutral-800 transition-colors uppercase tracking-widest"
                 >
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
@@ -177,6 +228,7 @@ export default function AdminProducts() {
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Price</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Status</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Size</th>
+                                    <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Action</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-neutral-200 bg-white">
@@ -220,6 +272,14 @@ export default function AdminProducts() {
                                                 {product.size || 'STD'}
                                             </span>
                                         </td>
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm font-semibold">
+                                            <button 
+                                                onClick={() => handleEditClick(product)}
+                                                className="text-blue-600 hover:text-blue-800 font-bold transition-colors uppercase tracking-wider text-[11px]"
+                                            >
+                                                Edit
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -235,11 +295,11 @@ export default function AdminProducts() {
                         
                         <div className="bg-neutral-50 px-8 py-6 border-b border-neutral-200 flex justify-between items-center flex-shrink-0">
                             <div>
-                                <h3 className="text-xl font-black text-neutral-900 uppercase tracking-tight">Add New Product</h3>
-                                <p className="text-xs text-neutral-500 mt-1 font-medium">Upload images and assign to a category</p>
+                                <h3 className="text-xl font-black text-neutral-900 uppercase tracking-tight">{editProduct ? 'Edit Product' : 'Add New Product'}</h3>
+                                <p className="text-xs text-neutral-500 mt-1 font-medium">{editProduct ? 'Modify the product details below' : 'Upload images and assign to a category'}</p>
                             </div>
                             <button 
-                                onClick={() => setIsModalOpen(false)}
+                                onClick={handleCloseModal}
                                 className="text-neutral-400 hover:text-black transition-colors rounded-full p-1 hover:bg-neutral-200"
                             >
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -312,6 +372,34 @@ export default function AdminProducts() {
                                 </div>
                                 
                                 <div className="border-t border-neutral-200 pt-6">
+                                    {editProduct && existingImages.length > 0 && (
+                                        <div className="mb-6">
+                                            <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-3">Existing Images</label>
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 bg-neutral-50 p-4 rounded-lg border border-neutral-200">
+                                                {existingImages.map((img, idx) => (
+                                                    <div key={idx} className="bg-white border border-neutral-200 rounded-lg p-3 flex flex-col items-center shadow-sm relative">
+                                                        <div className="w-full aspect-[3/4] mb-2 rounded-md overflow-hidden bg-neutral-100 ring-1 ring-neutral-200">
+                                                            <img src={formatImageUrl(img.url)} alt="" className="w-full h-full object-cover" />
+                                                        </div>
+                                                        <div className="text-[10px] font-bold text-neutral-600 truncate max-w-full">
+                                                            Color: <span className="font-mono">{img.color || 'default'}</span>
+                                                        </div>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setExistingImages(existingImages.filter((_, i) => i !== idx))}
+                                                            className="absolute top-1.5 right-1.5 bg-red-100 hover:bg-red-200 text-red-600 rounded-full p-1 transition-colors"
+                                                            title="Delete Image"
+                                                        >
+                                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
                                     <label className="block text-sm font-black text-neutral-900 uppercase tracking-widest mb-2">Product Images</label>
                                     <p className="text-xs text-neutral-500 mb-4 font-medium">Upload all product images here. Once uploaded, you can assign each image to a specific color from your list below, or leave it as Default.</p>
                                     
@@ -386,7 +474,7 @@ export default function AdminProducts() {
                                 <div className="pt-6 mt-2 border-t border-neutral-100 flex justify-end gap-3">
                                     <button 
                                         type="button" 
-                                        onClick={() => setIsModalOpen(false)}
+                                        onClick={handleCloseModal}
                                         className="py-3 px-6 rounded-md text-sm font-bold text-neutral-700 bg-white border border-neutral-300 hover:bg-neutral-50 transition-colors uppercase tracking-wider"
                                     >
                                         Cancel
@@ -395,7 +483,7 @@ export default function AdminProducts() {
                                         type="submit" 
                                         className="py-3 px-8 border border-transparent rounded-md shadow-md text-sm font-bold text-white bg-black hover:bg-neutral-800 transition-colors uppercase tracking-widest"
                                     >
-                                        Publish
+                                        {editProduct ? 'Update Product' : 'Publish'}
                                     </button>
                                 </div>
                             </form>
