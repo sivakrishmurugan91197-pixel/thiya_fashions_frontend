@@ -12,44 +12,8 @@ export default function AdminLayout({ children, title }) {
         router.push('/admin/login');
     };
 
-    const navItems = [
-        {
-            href: '/admin/categories',
-            label: 'Categories',
-            icon: (
-                <svg className="w-5 h-5 mr-3 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                </svg>
-            )
-        },
-        {
-            href: '/admin/products',
-            label: 'Products',
-            icon: (
-                <svg className="w-5 h-5 mr-3 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                </svg>
-            )
-        },
-        {
-            href: '/admin/reports',
-            label: 'Sales Report',
-            icon: (
-                <svg className="w-5 h-5 mr-3 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-            )
-        },
-        {
-            href: '/admin/transactions',
-            label: 'Transaction Report',
-            icon: (
-                <svg className="w-5 h-5 mr-3 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                </svg>
-            )
-        }
-    ];
+    const isReportsActive = currentPath === '/admin/reports' || currentPath === '/admin/transactions';
+    const [isReportsOpen, setIsReportsOpen] = useState(isReportsActive);
 
     const sidebarContent = (
         <>
@@ -71,20 +35,72 @@ export default function AdminLayout({ children, title }) {
             <div className="px-6 py-8 flex-1 overflow-y-auto">
                 <p className="text-xs font-bold text-neutral-500 uppercase tracking-widest mb-6">Menu</p>
                 <nav className="space-y-2">
-                    {navItems.map((item) => {
-                        const isActive = currentPath === item.href;
-                        return (
-                            <Link 
-                                key={item.href}
-                                href={item.href} 
-                                onClick={() => setIsMobileOpen(false)}
-                                className={`flex items-center px-4 py-3 rounded-md transition-all duration-200 group ${isActive ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-neutral-400 hover:bg-neutral-900 hover:text-white'}`}
+                    {/* Categories Link */}
+                    <Link 
+                        href="/admin/categories" 
+                        onClick={() => setIsMobileOpen(false)}
+                        className={`flex items-center px-4 py-3 rounded-md transition-all duration-200 group ${currentPath === '/admin/categories' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-neutral-400 hover:bg-neutral-900 hover:text-white'}`}
+                    >
+                        <svg className="w-5 h-5 mr-3 transition-colors text-neutral-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                        <span className="font-bold text-sm tracking-wide">Categories</span>
+                    </Link>
+
+                    {/* Products Link */}
+                    <Link 
+                        href="/admin/products" 
+                        onClick={() => setIsMobileOpen(false)}
+                        className={`flex items-center px-4 py-3 rounded-md transition-all duration-200 group ${currentPath === '/admin/products' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-neutral-400 hover:bg-neutral-900 hover:text-white'}`}
+                    >
+                        <svg className="w-5 h-5 mr-3 transition-colors text-neutral-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                        <span className="font-bold text-sm tracking-wide">Products</span>
+                    </Link>
+
+                    {/* Reports Dropdown Group */}
+                    <div>
+                        <button 
+                            onClick={() => setIsReportsOpen(!isReportsOpen)}
+                            className={`flex w-full items-center justify-between px-4 py-3 rounded-md transition-all duration-200 group ${isReportsActive ? 'text-white bg-neutral-900' : 'text-neutral-400 hover:bg-neutral-900 hover:text-white'}`}
+                        >
+                            <div className="flex items-center">
+                                <svg className="w-5 h-5 mr-3 transition-colors text-neutral-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <span className="font-bold text-sm tracking-wide">Reports</span>
+                            </div>
+                            <svg 
+                                className={`w-4 h-4 transition-transform duration-200 ${isReportsOpen ? 'rotate-180' : 'rotate-0'}`} 
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
                             >
-                                {item.icon}
-                                <span className="font-bold text-sm tracking-wide">{item.label}</span>
-                            </Link>
-                        );
-                    })}
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        {/* Submenu links */}
+                        {isReportsOpen && (
+                            <div className="pl-6 mt-1 space-y-1 transition-all duration-200">
+                                <Link 
+                                    href="/admin/reports"
+                                    onClick={() => setIsMobileOpen(false)}
+                                    className={`flex items-center px-4 py-2.5 rounded-md transition-all duration-150 group ${currentPath === '/admin/reports' ? 'bg-blue-600 text-white font-bold' : 'text-neutral-500 hover:text-white hover:bg-neutral-900/60'}`}
+                                >
+                                    <span className="text-xs font-bold tracking-wide">Sales Report</span>
+                                </Link>
+                                <Link 
+                                    href="/admin/transactions"
+                                    onClick={() => setIsMobileOpen(false)}
+                                    className={`flex items-center px-4 py-2.5 rounded-md transition-all duration-150 group ${currentPath === '/admin/transactions' ? 'bg-blue-600 text-white font-bold' : 'text-neutral-500 hover:text-white hover:bg-neutral-900/60'}`}
+                                >
+                                    <span className="text-xs font-bold tracking-wide">Transaction Report</span>
+                                </Link>
+                            </div>
+                        )}
+                    </div>
                 </nav>
             </div>
 
