@@ -79,7 +79,7 @@ export default function Products() {
     };
 
     return (
-        <ThiyaLayout>
+        <ThiyaLayout title="Shop Collection" description="Explore our exclusive collection of premium sarees, cottons, silks, and trending designs direct from our in-house manufacturing units.">
             <div className="bg-neutral-50 min-h-screen pb-20">
                 
                 {/* Hero Banner / Subheader */}

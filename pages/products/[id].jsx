@@ -61,11 +61,11 @@ export default function ProductDetails() {
 
 
     if (loading) {
-        return <ThiyaLayout><div className="flex justify-center items-center h-screen bg-white"><div className="w-16 h-16 border-t-2 border-black rounded-full animate-spin"></div></div></ThiyaLayout>;
+        return <ThiyaLayout title="Loading Product..." description="Loading premium products from Thiya Fashions."><div className="flex justify-center items-center h-screen bg-white"><div className="w-16 h-16 border-t-2 border-black rounded-full animate-spin"></div></div></ThiyaLayout>;
     }
 
     if (!product) {
-        return <ThiyaLayout><div className="text-center py-32 bg-white min-h-screen"><h2>Product not found</h2></div></ThiyaLayout>;
+        return <ThiyaLayout title="Product Not Found" description="The requested product could not be found."><div className="text-center py-32 bg-white min-h-screen"><h2>Product not found</h2></div></ThiyaLayout>;
     }
 
     const unitPrice = parseFloat(product.price) - parseFloat(product.discount_amount || 0);
@@ -78,7 +78,7 @@ export default function ProductDetails() {
     const detailsKeys = product.details ? Object.keys(product.details) : [];
 
     return (
-        <ThiyaLayout>
+        <ThiyaLayout title={product.title} description={product.description ? product.description.substring(0, 150) + "..." : `Buy ${product.title} at unbeatable direct manufacturing price.`}>
             <div className="bg-white min-h-screen">
                 <div className="mx-auto max-w-screen-2xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
                     <div className="lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">

@@ -12,7 +12,7 @@ export default function Contact() {
     };
 
     return (
-        <ThiyaLayout>
+        <ThiyaLayout title="Contact Us" description="Get in touch with Thiya Fashions. Sourcing trending designs and premium clothing at unbeatable rates. Send us a message or WhatsApp us at 9361356409.">
             <div className="isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
                 <div className="mx-auto max-w-2xl text-center">
                     <h2 className="text-3xl font-black tracking-tight text-gray-900 sm:text-5xl">Contact Us</h2>

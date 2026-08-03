@@ -113,8 +113,12 @@ export default function AdminProducts() {
         });
 
         try {
+            const auth = localStorage.getItem('thiya_admin_auth');
             const response = await axios.post(`${API_URL}/api/thiya/products`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
+                headers: { 
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${auth}`
+                }
             });
             
             if (response.data.is_success) {

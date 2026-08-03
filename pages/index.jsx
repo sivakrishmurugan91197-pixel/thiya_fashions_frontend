@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Home() {
     return (
-        <ThiyaLayout>
+        <ThiyaLayout title="Home" description="Elevate your style with Thiya Fashions. Sourcing directly from manufacturers to provide the latest premium wholesale collections at unbeatable rates.">
             {/* Hero Section */}
             <div className="relative isolate overflow-hidden bg-gray-900">
                 <img

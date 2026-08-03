@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -15,12 +16,22 @@ const formatImageUrl = (url) => {
     return url;
 };
 
-export default function ThiyaLayout({ children }) {
+export default function ThiyaLayout({ children, title, description }) {
     const { cart, cartCount, cartTotal, updateQuantity, removeFromCart, isCartOpen, setIsCartOpen } = useCart();
     const router = useRouter();
 
     return (
         <div className="min-h-screen bg-neutral-50 flex flex-col font-sans text-neutral-900">
+            <Head>
+                <title>{title ? `${title} | Thiya Fashions` : 'Thiya Fashions - Premium Trendsetting Collections'}</title>
+                <meta name="description" content={description || "Wholesale & retail premium clothing direct from manufacturers. Follow us on Instagram @thiya_fashions_."} />
+                <meta name="keywords" content="Thiya Fashions, premium clothing, sarees, dress material, wholesale fashion, manufacturing dress, online shopping" />
+                <meta property="og:title" content={title ? `${title} | Thiya Fashions` : 'Thiya Fashions - Premium Trendsetting Collections'} />
+                <meta property="og:description" content={description || "Wholesale & retail premium clothing direct from manufacturers."} />
+                <meta property="og:image" content="/images/thiya_logo.png" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
             {/* Header */}
             <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-neutral-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

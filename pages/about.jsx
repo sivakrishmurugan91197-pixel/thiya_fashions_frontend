@@ -2,7 +2,7 @@ import ThiyaLayout from '@/components/ThiyaLayout';
 
 export default function About() {
     return (
-        <ThiyaLayout>
+        <ThiyaLayout title="About Us" description="Learn about Thiya Fashions, your premier destination for high-quality wholesale, retail, and manufactured clothing. Sourced directly from manufacturers.">
             <div className="bg-white py-24 sm:py-32">
                 <div className="mx-auto max-w-7xl px-6 lg:px-8">
                     <div className="mx-auto max-w-2xl lg:mx-0">

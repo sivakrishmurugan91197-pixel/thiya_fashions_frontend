@@ -212,7 +212,7 @@ export default function CheckoutPage() {
 
     if (loading) {
         return (
-            <ThiyaLayout>
+            <ThiyaLayout title="Secure Checkout" description="Complete your Thiya Fashions checkout details and pay securely using Razorpay.">
                 <div className="flex justify-center items-center min-h-[60vh] bg-white">
                     <div className="w-16 h-16 border-t-2 border-pink-500 rounded-full animate-spin"></div>
                 </div>
@@ -222,7 +222,7 @@ export default function CheckoutPage() {
 
     if (checkoutItems.length === 0) {
         return (
-            <ThiyaLayout>
+            <ThiyaLayout title="Secure Checkout" description="Complete your Thiya Fashions checkout details and pay securely using Razorpay.">
                 <div className="text-center py-32 bg-white min-h-[60vh]">
                     <h2 className="text-xl font-bold text-neutral-800">Checkout parameters are invalid or your cart is empty</h2>
                     <button onClick={() => router.push('/products')} className="mt-4 py-2 px-6 bg-pink-600 text-white rounded font-bold uppercase tracking-wider text-sm hover:bg-pink-700 transition-colors">
@@ -238,7 +238,7 @@ export default function CheckoutPage() {
     const totalAmount = subtotal + gstAmount;
 
     return (
-        <ThiyaLayout>
+        <ThiyaLayout title="Secure Checkout" description="Complete your Thiya Fashions checkout details and pay securely using Razorpay.">
             <div className="bg-neutral-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-6xl mx-auto">
                     

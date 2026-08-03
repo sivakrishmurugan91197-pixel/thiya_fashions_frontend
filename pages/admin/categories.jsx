@@ -50,11 +50,13 @@ export default function AdminCategories() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            const auth = localStorage.getItem('thiya_admin_auth');
+            const headers = { headers: { Authorization: `Bearer ${auth}` } };
             let response;
             if (editCategory) {
-                response = await axios.put(`${API_URL}/api/thiya/categories/${editCategory.id}`, formData);
+                response = await axios.put(`${API_URL}/api/thiya/categories/${editCategory.id}`, formData, headers);
             } else {
-                response = await axios.post(`${API_URL}/api/thiya/categories`, formData);
+                response = await axios.post(`${API_URL}/api/thiya/categories`, formData, headers);
             }
             
             if (response.data.is_success) {

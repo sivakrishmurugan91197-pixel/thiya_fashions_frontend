@@ -8,7 +8,7 @@ export default function OrderSuccess() {
     const formattedAmount = amount ? parseFloat(amount).toFixed(2) : '0.00';
 
     return (
-        <ThiyaLayout>
+        <ThiyaLayout title="Order Placed Successfully" description="Your Thiya Fashions order was completed successfully. Check details here.">
             <div className="min-h-[70vh] flex items-center justify-center bg-neutral-50 py-12 px-4 sm:px-6 lg:px-8">
                 <div className="bg-white rounded-3xl shadow-xl max-w-md w-full p-8 border border-neutral-200 text-center relative overflow-hidden animate-in fade-in zoom-in-95 duration-300">
                     {/* Confetti / Sparkle top accent */}

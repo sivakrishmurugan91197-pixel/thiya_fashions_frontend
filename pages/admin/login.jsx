@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 export default function AdminLogin() {
     const [email, setEmail] = useState('');
@@ -7,14 +10,16 @@ export default function AdminLogin() {
     const [error, setError] = useState('');
     const router = useRouter();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        if (email === 'admin@gmail.com' && password === 'password') {
-            // Simple client-side auth for demo
-            localStorage.setItem('thiya_admin_auth', 'true');
-            router.push('/admin/products');
-        } else {
-            setError('Invalid email or password');
+        try {
+            const response = await axios.post(`${API_URL}/api/thiya/admin/login`, { email, password });
+            if (response.data.is_success) {
+                localStorage.setItem('thiya_admin_auth', response.data.token);
+                router.push('/admin/products');
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || 'Invalid email or password');
         }
     };
 

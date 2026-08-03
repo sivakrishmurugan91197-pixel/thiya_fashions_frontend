@@ -14,7 +14,10 @@ export default function AdminTransactions() {
 
     const fetchTransactions = async () => {
         try {
-            const response = await axios.get(`${API_URL}/api/thiya/transactions`);
+            const auth = localStorage.getItem('thiya_admin_auth');
+            const response = await axios.get(`${API_URL}/api/thiya/transactions`, {
+                headers: { Authorization: `Bearer ${auth}` }
+            });
             if (response.data.is_success) {
                 setTransactions(response.data.data);
             }

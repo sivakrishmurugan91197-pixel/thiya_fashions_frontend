@@ -24,7 +24,10 @@ export default function AdminReports() {
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get(`${API_URL}/api/thiya/reports`);
+            const auth = localStorage.getItem('thiya_admin_auth');
+            const response = await axios.get(`${API_URL}/api/thiya/reports`, {
+                headers: { Authorization: `Bearer ${auth}` }
+            });
             if (response.data.is_success) {
                 setOrders(response.data.data);
             }
