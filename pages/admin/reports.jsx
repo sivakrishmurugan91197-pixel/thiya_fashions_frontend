@@ -5,6 +5,17 @@ import { useRouter } from 'next/router';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
+const formatImageUrl = (url) => {
+    if (!url) return 'https://via.placeholder.com/64';
+    if (url.startsWith('http') && url.includes('localhost:3000')) {
+        return url.replace('http://localhost:3000', API_URL);
+    }
+    if (url.startsWith('/uploads')) {
+        return `${API_URL}${url}`;
+    }
+    return url;
+};
+
 export default function AdminReports() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -121,7 +132,7 @@ export default function AdminReports() {
                                                 {order.color && (
                                                     <span className="flex items-center gap-1">
                                                         • Color: {order.color}
-                                                        {order.color.startsWith('#') && (
+                                                        {order.color.toLowerCase() !== 'default' && order.color.toLowerCase() !== 'standard' && (
                                                             <span className="w-2.5 h-2.5 rounded-full border border-black/10 inline-block" style={{ backgroundColor: order.color }}></span>
                                                         )}
                                                     </span>
@@ -202,8 +213,8 @@ export default function AdminReports() {
                                         <div className="h-16 w-16 bg-white rounded border border-neutral-200 overflow-hidden flex-shrink-0">
                                             {(() => {
                                                 const matchedImg = selectedOrder.product?.images?.find(img => img.color === selectedOrder.color);
-                                                const imgSrc = matchedImg?.url || selectedOrder.product?.images?.[0]?.url || 'https://via.placeholder.com/64';
-                                                return <img src={imgSrc} className="w-full h-full object-cover" alt="Product thumbnail" />;
+                                                const imgSrc = matchedImg?.url || selectedOrder.product?.images?.[0]?.url || '';
+                                                return <img src={formatImageUrl(imgSrc)} className="w-full h-full object-cover" alt="Product thumbnail" />;
                                             })()}
                                         </div>
                                         <div>
@@ -218,8 +229,8 @@ export default function AdminReports() {
                                                 {selectedOrder.color && (
                                                     <span className="inline-flex items-center gap-1 rounded bg-neutral-250/20 px-2 py-0.5 text-xs font-bold text-neutral-600">
                                                         Color: {selectedOrder.color}
-                                                        {selectedOrder.color.startsWith('#') && (
-                                                            <span className="w-2.5 h-2.5 rounded-full border border-black/10 inline-block" style={{ backgroundColor: selectedOrder.color }}></span>
+                                                        {selectedOrder.color.toLowerCase() !== 'default' && selectedOrder.color.toLowerCase() !== 'standard' && (
+                                                            <span className="w-2.5 h-2.5 rounded-full border border-black/10 inline-block shadow-sm" style={{ backgroundColor: selectedOrder.color }}></span>
                                                         )}
                                                     </span>
                                                 )}

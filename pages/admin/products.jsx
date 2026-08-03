@@ -5,6 +5,17 @@ import { useRouter } from 'next/router';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
+const formatImageUrl = (url) => {
+    if (!url) return 'https://via.placeholder.com/64';
+    if (url.startsWith('http') && url.includes('localhost:3000')) {
+        return url.replace('http://localhost:3000', API_URL);
+    }
+    if (url.startsWith('/uploads')) {
+        return `${API_URL}${url}`;
+    }
+    return url;
+};
+
 export default function AdminProducts() {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -166,7 +177,7 @@ export default function AdminProducts() {
                                             <div className="flex items-center">
                                                 <div className="h-16 w-16 flex-shrink-0 bg-neutral-100 rounded-md overflow-hidden border border-neutral-200">
                                                     <img 
-                                                        src={product.images && product.images.length > 0 ? product.images[0]?.url : 'https://via.placeholder.com/64'} 
+                                                        src={product.images && product.images.length > 0 ? formatImageUrl(product.images[0]?.url) : 'https://via.placeholder.com/64'} 
                                                         alt="" 
                                                         className="h-full w-full object-cover" 
                                                     />

@@ -6,6 +6,17 @@ import { useCart } from '@/contexts/CartContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
+const formatImageUrl = (url) => {
+    if (!url) return 'https://via.placeholder.com/150?text=Thiya';
+    if (url.startsWith('http') && url.includes('localhost:3000')) {
+        return url.replace('http://localhost:3000', API_URL);
+    }
+    if (url.startsWith('/uploads')) {
+        return `${API_URL}${url}`;
+    }
+    return url;
+};
+
 export default function CheckoutPage() {
     const router = useRouter();
     const { productId, quantity: qtyParam, size, color } = router.query;
@@ -372,7 +383,7 @@ export default function CheckoutPage() {
                                     <div key={`${item.productId}-${item.size}-${item.color}`} className="flex gap-4 py-4 first:pt-0 last:pb-0">
                                         <div className="w-16 h-16 bg-neutral-100 rounded-lg overflow-hidden border border-neutral-200 flex-shrink-0">
                                             <img 
-                                                src={item.image || "https://via.placeholder.com/150?text=Thiya"} 
+                                                src={formatImageUrl(item.image)} 
                                                 alt={item.title} 
                                                 className="w-full h-full object-cover"
                                             />

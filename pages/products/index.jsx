@@ -5,6 +5,17 @@ import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
+const formatImageUrl = (url) => {
+    if (!url) return 'https://via.placeholder.com/400x500?text=Premium+Collection';
+    if (url.startsWith('http') && url.includes('localhost:3000')) {
+        return url.replace('http://localhost:3000', API_URL);
+    }
+    if (url.startsWith('/uploads')) {
+        return `${API_URL}${url}`;
+    }
+    return url;
+};
+
 export default function Products() {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -53,7 +64,7 @@ export default function Products() {
         // 1. Try to find the first product in this category
         const firstProd = products.find((p) => p.category_id === category.id);
         if (firstProd && firstProd.images && firstProd.images.length > 0) {
-            return firstProd.images[0].url;
+            return formatImageUrl(firstProd.images[0].url);
         }
         
         // 2. Return high-quality Unsplash fallbacks based on menu/category
@@ -207,7 +218,7 @@ export default function Products() {
                                                 {/* Product Image */}
                                                 <div className="aspect-[3/4] w-full overflow-hidden bg-neutral-100 relative">
                                                     <img
-                                                        src={product.images && product.images.length > 0 ? product.images[0]?.url : 'https://via.placeholder.com/400x500?text=Premium+Collection'}
+                                                        src={product.images && product.images.length > 0 ? formatImageUrl(product.images[0]?.url) : 'https://via.placeholder.com/400x500?text=Premium+Collection'}
                                                         alt={product.title}
                                                         className="h-full w-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
                                                     />

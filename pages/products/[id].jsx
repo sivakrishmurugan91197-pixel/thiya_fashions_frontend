@@ -6,6 +6,17 @@ import { useCart } from '@/contexts/CartContext';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
+const formatImageUrl = (url) => {
+    if (!url) return 'https://via.placeholder.com/800x1000?text=Premium+Collection';
+    if (url.startsWith('http') && url.includes('localhost:3000')) {
+        return url.replace('http://localhost:3000', API_URL);
+    }
+    if (url.startsWith('/uploads')) {
+        return `${API_URL}${url}`;
+    }
+    return url;
+};
+
 export default function ProductDetails() {
     const router = useRouter();
     const { addToCart } = useCart();
@@ -86,7 +97,7 @@ export default function ProductDetails() {
                                             }}
                                             className={`aspect-[3/4] w-20 lg:w-full bg-neutral-100 overflow-hidden cursor-pointer rounded-sm hover:opacity-75 transition-opacity border-2 ${selectedImage === i ? 'border-black' : 'border-transparent'}`}
                                         >
-                                            <img src={img.url} className="w-full h-full object-cover" alt="Thumbnail" />
+                                            <img src={formatImageUrl(img.url)} className="w-full h-full object-cover" alt="Thumbnail" />
                                         </button>
                                     ))}
                                 </div>
@@ -94,7 +105,7 @@ export default function ProductDetails() {
                             {/* Main Image */}
                             <div className="aspect-[3/4] w-full overflow-hidden bg-neutral-100 rounded-sm flex-grow relative">
                                 <img
-                                    src={product.images && product.images.length > 0 ? product.images[selectedImage]?.url : 'https://via.placeholder.com/800x1000?text=Premium+Collection'}
+                                    src={product.images && product.images.length > 0 ? formatImageUrl(product.images[selectedImage]?.url) : 'https://via.placeholder.com/800x1000?text=Premium+Collection'}
                                     alt={product.title}
                                     className="h-full w-full object-cover object-top"
                                 />

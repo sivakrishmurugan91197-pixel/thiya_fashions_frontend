@@ -2,6 +2,19 @@ import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
 import { useRouter } from 'next/router';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+
+const formatImageUrl = (url) => {
+    if (!url) return 'https://via.placeholder.com/150?text=Thiya';
+    if (url.startsWith('http') && url.includes('localhost:3000')) {
+        return url.replace('http://localhost:3000', API_URL);
+    }
+    if (url.startsWith('/uploads')) {
+        return `${API_URL}${url}`;
+    }
+    return url;
+};
+
 export default function ThiyaLayout({ children }) {
     const { cart, cartCount, cartTotal, updateQuantity, removeFromCart, isCartOpen, setIsCartOpen } = useCart();
     const router = useRouter();
@@ -194,7 +207,7 @@ export default function ThiyaLayout({ children }) {
                                     cart.map((item) => (
                                         <div key={item.id} className="py-4 flex gap-4">
                                             <div className="w-20 h-20 bg-neutral-50 rounded-lg overflow-hidden border border-neutral-200 flex-shrink-0">
-                                                <img src={item.image || "https://via.placeholder.com/150"} alt={item.title} className="w-full h-full object-cover" />
+                                                <img src={formatImageUrl(item.image)} alt={item.title} className="w-full h-full object-cover" />
                                             </div>
                                             <div className="flex-1 flex flex-col justify-between min-w-0">
                                                 <div>
