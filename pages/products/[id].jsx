@@ -17,13 +17,7 @@ export default function ProductDetails() {
     const [selectedColor, setSelectedColor] = useState('');
     const [quantity, setQuantity] = useState(1);
     
-    // Checkout State
-    const [showCheckoutModal, setShowCheckoutModal] = useState(false);
-    const [purchasing, setPurchasing] = useState(false);
-    const [checkoutForm, setCheckoutForm] = useState({
-        customer_name: '', customer_email: '', phone: '', alt_phone: '',
-        door_no: '', street: '', landmark: '', city: '', district: '', pincode: '', state: ''
-    });
+
 
     useEffect(() => {
         if (!id) return;
@@ -51,109 +45,7 @@ export default function ProductDetails() {
         fetchProduct();
     }, [id]);
 
-    const handleFormChange = (e) => {
-        setCheckoutForm({ ...checkoutForm, [e.target.name]: e.target.value });
-    };
 
-    const initializeRazorpay = () => {
-        return new Promise((resolve) => {
-            const script = document.createElement("script");
-            script.src = "https://checkout.razorpay.com/v1/checkout.js";
-            script.onload = () => resolve(true);
-            script.onerror = () => resolve(false);
-            document.body.appendChild(script);
-        });
-    };
-
-    const handleProceedToPayment = async (e) => {
-        e.preventDefault();
-        setPurchasing(true);
-        const res = await initializeRazorpay();
-
-        if (!res) {
-            alert("Razorpay SDK Failed to load");
-            setPurchasing(false);
-            return;
-        }
-
-        try {
-            const orderResponse = await axios.post(`${API_URL}/api/thiya/orders`, {
-                product_id: product.id,
-                ...checkoutForm,
-                quantity
-            });
-
-            if (!orderResponse.data.is_success) {
-                alert("Failed to create order");
-                setPurchasing(false);
-                return;
-            }
-
-            const { order_id, razorpay_order_id, amount, currency, key_id } = orderResponse.data.data;
-
-            // Handle mock orders locally without launching Razorpay widget
-            if (razorpay_order_id.startsWith('mock_')) {
-                const mockPaymentId = 'mock_payment_' + Date.now();
-                const verifyRes = await axios.post(`${API_URL}/api/thiya/orders/verify`, {
-                    razorpay_payment_id: mockPaymentId,
-                    razorpay_order_id: razorpay_order_id,
-                    razorpay_signature: 'mock_signature',
-                    order_id: order_id
-                });
-
-                if (verifyRes.data.is_success) {
-                    setShowCheckoutModal(false);
-                    router.push(`/order-success?transactionId=${mockPaymentId}&title=${encodeURIComponent(product.title)}&quantity=${quantity}&amount=${totalAmount}`);
-                }
-                return;
-            }
-
-            const options = {
-                key: key_id,
-                amount: amount.toString(),
-                currency: currency,
-                name: "Thiya Fashions",
-                description: `Purchase of ${product.title}`,
-                image: product.images?.[0]?.url || "https://via.placeholder.com/150?text=Thiya",
-                order_id: razorpay_order_id,
-                handler: async function (response) {
-                    try {
-                        const verifyRes = await axios.post(`${API_URL}/api/thiya/orders/verify`, {
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_order_id: response.razorpay_order_id,
-                            razorpay_signature: response.razorpay_signature,
-                            order_id: order_id
-                        });
-
-                        if (verifyRes.data.is_success) {
-                            setShowCheckoutModal(false);
-                            router.push(`/order-success?transactionId=${response.razorpay_payment_id}&title=${encodeURIComponent(product.title)}&quantity=${quantity}&amount=${totalAmount}`);
-                        }
-                    } catch (error) {
-                        alert("Payment verification failed");
-                    }
-                },
-                prefill: {
-                    name: checkoutForm.customer_name,
-                    email: checkoutForm.customer_email,
-                    contact: checkoutForm.phone
-                },
-                theme: { color: "#000000" }
-            };
-
-            const paymentObject = new window.Razorpay(options);
-            paymentObject.on('payment.failed', function (response){
-                alert("Payment failed: " + response.error.description);
-            });
-            paymentObject.open();
-
-        } catch (error) {
-            console.error("Error during purchase:", error);
-            alert(`Something went wrong: ${error.response?.data?.message || error.message}`);
-        } finally {
-            setPurchasing(false);
-        }
-    };
 
     if (loading) {
         return <ThiyaLayout><div className="flex justify-center items-center h-screen bg-white"><div className="w-16 h-16 border-t-2 border-black rounded-full animate-spin"></div></div></ThiyaLayout>;
@@ -299,7 +191,9 @@ export default function ProductDetails() {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => setShowCheckoutModal(true)}
+                                    onClick={() => {
+                                        router.push(`/checkout?productId=${product.id}&quantity=${quantity}&size=${selectedSize}&color=${selectedColor}`);
+                                    }}
                                     className="w-full flex items-center justify-center bg-black px-8 py-4 text-sm font-bold uppercase tracking-wider text-white hover:bg-neutral-800 transition-colors"
                                 >
                                     BUY IT NOW
@@ -332,92 +226,7 @@ export default function ProductDetails() {
                 </div>
             </div>
 
-            {/* Checkout Modal */}
-            {showCheckoutModal && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-neutral-900/70 backdrop-blur-sm p-4 overflow-y-auto">
-                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl my-8 animate-in fade-in zoom-in duration-200">
-                        <div className="px-6 py-4 border-b border-neutral-200 flex justify-between items-center sticky top-0 bg-white z-10 rounded-t-xl">
-                            <div>
-                                <h2 className="text-xl font-bold text-neutral-900">Checkout Details</h2>
-                                <p className="text-xs text-neutral-500">Please fill in your details to proceed with the purchase</p>
-                            </div>
-                            <button onClick={() => setShowCheckoutModal(false)} className="text-neutral-400 hover:text-black">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                            </button>
-                        </div>
 
-                        <form onSubmit={handleProceedToPayment} className="p-6 space-y-8">
-                            
-                            {/* Personal Info */}
-                            <div>
-                                <h3 className="text-sm font-bold text-neutral-800 flex items-center gap-2 mb-4">
-                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"></path></svg>
-                                    Personal Information
-                                </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <input type="text" name="customer_name" required placeholder="Enter your full name" onChange={handleFormChange} className="block w-full rounded-md border-0 py-2.5 px-3 text-neutral-900 ring-1 ring-inset ring-neutral-300 text-sm focus:ring-2 focus:ring-black" />
-                                    <input type="email" name="customer_email" required placeholder="Enter your email" onChange={handleFormChange} className="block w-full rounded-md border-0 py-2.5 px-3 text-neutral-900 ring-1 ring-inset ring-neutral-300 text-sm focus:ring-2 focus:ring-black" />
-                                    <input type="tel" name="phone" required placeholder="Enter your phone number" onChange={handleFormChange} className="block w-full rounded-md border-0 py-2.5 px-3 text-neutral-900 ring-1 ring-inset ring-neutral-300 text-sm focus:ring-2 focus:ring-black" />
-                                    <input type="tel" name="alt_phone" placeholder="Alternative Phone Number (Optional)" onChange={handleFormChange} className="block w-full rounded-md border-0 py-2.5 px-3 text-neutral-900 ring-1 ring-inset ring-neutral-300 text-sm focus:ring-2 focus:ring-black" />
-                                </div>
-                            </div>
-
-                            {/* Delivery Address */}
-                            <div>
-                                <h3 className="text-sm font-bold text-neutral-800 flex items-center gap-2 mb-4">
-                                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"></path></svg>
-                                    Delivery Address
-                                </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <input type="text" name="door_no" required placeholder="Door No / House No" onChange={handleFormChange} className="block w-full rounded-md border-0 py-2.5 px-3 text-neutral-900 ring-1 ring-inset ring-neutral-300 text-sm focus:ring-2 focus:ring-black" />
-                                    <input type="text" name="street" required placeholder="Street" onChange={handleFormChange} className="block w-full rounded-md border-0 py-2.5 px-3 text-neutral-900 ring-1 ring-inset ring-neutral-300 text-sm focus:ring-2 focus:ring-black" />
-                                    <input type="text" name="landmark" placeholder="Landmark" onChange={handleFormChange} className="md:col-span-2 block w-full rounded-md border-0 py-2.5 px-3 text-neutral-900 ring-1 ring-inset ring-neutral-300 text-sm focus:ring-2 focus:ring-black" />
-                                    <input type="text" name="city" required placeholder="City" onChange={handleFormChange} className="block w-full rounded-md border-0 py-2.5 px-3 text-neutral-900 ring-1 ring-inset ring-neutral-300 text-sm focus:ring-2 focus:ring-black" />
-                                    <input type="text" name="district" required placeholder="District" onChange={handleFormChange} className="block w-full rounded-md border-0 py-2.5 px-3 text-neutral-900 ring-1 ring-inset ring-neutral-300 text-sm focus:ring-2 focus:ring-black" />
-                                    <input type="text" name="pincode" required placeholder="Pin Code" onChange={handleFormChange} className="block w-full rounded-md border-0 py-2.5 px-3 text-neutral-900 ring-1 ring-inset ring-neutral-300 text-sm focus:ring-2 focus:ring-black" />
-                                    <input type="text" name="state" required placeholder="State" onChange={handleFormChange} className="block w-full rounded-md border-0 py-2.5 px-3 text-neutral-900 ring-1 ring-inset ring-neutral-300 text-sm focus:ring-2 focus:ring-black" />
-                                </div>
-                            </div>
-
-                            {/* Order Summary */}
-                            <div className="bg-neutral-50 p-4 rounded-lg">
-                                <h3 className="text-sm font-bold text-neutral-900 mb-3">Order Summary</h3>
-                                <div className="space-y-2 text-sm text-neutral-600">
-                                    <div className="flex justify-between">
-                                        <span>Product:</span>
-                                        <span className="font-medium text-right max-w-[250px] truncate" title={product.title}>{product.title}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span>Quantity:</span>
-                                        <span className="font-medium">{quantity}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span>Price per unit:</span>
-                                        <span className="font-medium">₹{unitPrice.toFixed(2)}</span>
-                                    </div>
-                                    <div className="flex justify-between border-b border-neutral-200 pb-2">
-                                        <span>GST (5%):</span>
-                                        <span className="font-medium">₹{gstAmount.toFixed(2)}</span>
-                                    </div>
-                                    <div className="flex justify-between pt-2 font-bold text-neutral-900">
-                                        <span>Total:</span>
-                                        <span>₹{totalAmount.toFixed(2)}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="flex justify-end gap-3 pt-4 border-t border-neutral-200">
-                                <button type="button" onClick={() => setShowCheckoutModal(false)} className="px-6 py-2.5 border border-neutral-300 rounded text-sm font-bold text-neutral-700 hover:bg-neutral-50 transition-colors">
-                                    Cancel
-                                </button>
-                                <button type="submit" disabled={purchasing} className="px-6 py-2.5 bg-black rounded text-sm font-bold text-white hover:bg-neutral-800 transition-colors disabled:bg-neutral-400">
-                                    {purchasing ? "Processing..." : "Proceed to Payment"}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
 
 
         </ThiyaLayout>
