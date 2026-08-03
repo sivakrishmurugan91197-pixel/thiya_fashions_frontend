@@ -68,7 +68,12 @@ export default function AdminCategories() {
             }
         } catch (error) {
             console.error("Error saving category:", error);
-            alert("Failed to save category");
+            if (error.response && error.response.status === 401) {
+                localStorage.removeItem('thiya_admin_auth');
+                router.push('/admin/login');
+            } else {
+                alert("Failed to save category");
+            }
         }
     };
 

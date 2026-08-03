@@ -33,6 +33,10 @@ export default function AdminReports() {
             }
         } catch (error) {
             console.error("Error fetching reports:", error);
+            if (error.response && error.response.status === 401) {
+                localStorage.removeItem('thiya_admin_auth');
+                router.push('/admin/login');
+            }
         } finally {
             setLoading(false);
         }

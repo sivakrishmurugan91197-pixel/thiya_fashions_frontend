@@ -132,7 +132,12 @@ export default function AdminProducts() {
             }
         } catch (error) {
             console.error("Error adding product:", error);
-            alert("Failed to add product");
+            if (error.response && error.response.status === 401) {
+                localStorage.removeItem('thiya_admin_auth');
+                router.push('/admin/login');
+            } else {
+                alert("Failed to add product");
+            }
         }
     };
 
