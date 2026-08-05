@@ -16,6 +16,80 @@ const formatImageUrl = (url) => {
     return url;
 };
 
+const colorNameMap = {
+    '#000000': 'Black',
+    '#ffffff': 'White',
+    '#ff0000': 'Red',
+    '#00ff00': 'Lime',
+    '#0000ff': 'Blue',
+    '#ffff00': 'Yellow',
+    '#00ffff': 'Cyan',
+    '#ff00ff': 'Magenta',
+    '#c0c0c0': 'Silver',
+    '#808080': 'Gray',
+    '#800000': 'Maroon',
+    '#808000': 'Olive',
+    '#008000': 'Green',
+    '#800080': 'Purple',
+    '#008080': 'Teal',
+    '#000080': 'Navy',
+    '#a52a2a': 'Brown',
+    '#ff7f50': 'Coral',
+    '#ff69b4': 'Hot Pink',
+    '#ffd700': 'Gold',
+    '#4b0082': 'Indigo',
+    '#ffc0cb': 'Pink',
+    '#dda0dd': 'Plum',
+    '#40e0d0': 'Turquoise',
+    '#ee82ee': 'Violet',
+    '#821515': 'Deep Maroon',
+    '#598554': 'Sage Green',
+    '#e3788c': 'Rose Pink',
+    '#f1ffe6': 'Mint Green',
+};
+
+const hexToRgb = (hex) => {
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    const fullHex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(fullHex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+};
+
+const getColorName = (hex) => {
+    if (!hex) return '';
+    if (!hex.startsWith('#')) {
+        return hex.charAt(0).toUpperCase() + hex.slice(1);
+    }
+    const target = hex.toLowerCase().trim();
+    if (colorNameMap[target]) return colorNameMap[target];
+
+    const targetRgb = hexToRgb(target);
+    if (!targetRgb) return hex;
+
+    let minDistance = Infinity;
+    let closestName = hex;
+
+    for (const [key, name] of Object.entries(colorNameMap)) {
+        const rgb = hexToRgb(key);
+        if (rgb) {
+            const distance = Math.sqrt(
+                Math.pow(targetRgb.r - rgb.r, 2) +
+                Math.pow(targetRgb.g - rgb.g, 2) +
+                Math.pow(targetRgb.b - rgb.b, 2)
+            );
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestName = name;
+            }
+        }
+    }
+    return closestName;
+};
+
 export default function AdminProducts() {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -381,8 +455,22 @@ export default function AdminProducts() {
                                                         <div className="w-full aspect-[3/4] mb-2 rounded-md overflow-hidden bg-neutral-100 ring-1 ring-neutral-200">
                                                             <img src={formatImageUrl(img.url)} alt="" className="w-full h-full object-cover" />
                                                         </div>
-                                                        <div className="text-[10px] font-bold text-neutral-600 truncate max-w-full">
-                                                            Color: <span className="font-mono">{img.color || 'default'}</span>
+                                                        <div className="w-full text-center mt-1">
+                                                            <label className="text-[9px] font-black text-neutral-400 uppercase tracking-wider block mb-1">Map to Color</label>
+                                                            <select 
+                                                                value={img.color || 'default'} 
+                                                                onChange={(e) => {
+                                                                    const updated = [...existingImages];
+                                                                    updated[idx] = { ...updated[idx], color: e.target.value };
+                                                                    setExistingImages(updated);
+                                                                }}
+                                                                className="block w-full text-[10px] rounded border-neutral-305 py-1 px-1 bg-neutral-50 font-mono font-bold focus:ring-1 focus:ring-black focus:border-black"
+                                                            >
+                                                                <option value="default">Default</option>
+                                                                {colorList.map(c => (
+                                                                    <option key={c} value={c}>{getColorName(c)}</option>
+                                                                ))}
+                                                            </select>
                                                         </div>
                                                         <button
                                                             type="button"
@@ -426,7 +514,7 @@ export default function AdminProducts() {
                                                     >
                                                         <option value="default">Default</option>
                                                         {colorList.map(c => (
-                                                            <option key={c} value={c}>{c}</option>
+                                                            <option key={c} value={c}>{getColorName(c)}</option>
                                                         ))}
                                                     </select>
                                                     {imageColors[index] !== 'default' && (

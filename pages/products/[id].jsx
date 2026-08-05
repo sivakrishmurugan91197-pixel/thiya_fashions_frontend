@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useCart } from '@/contexts/CartContext';
+import Link from 'next/link';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -17,12 +18,87 @@ const formatImageUrl = (url) => {
     return url;
 };
 
+const colorNameMap = {
+    '#000000': 'Black',
+    '#ffffff': 'White',
+    '#ff0000': 'Red',
+    '#00ff00': 'Lime',
+    '#0000ff': 'Blue',
+    '#ffff00': 'Yellow',
+    '#00ffff': 'Cyan',
+    '#ff00ff': 'Magenta',
+    '#c0c0c0': 'Silver',
+    '#808080': 'Gray',
+    '#800000': 'Maroon',
+    '#808000': 'Olive',
+    '#008000': 'Green',
+    '#800080': 'Purple',
+    '#008080': 'Teal',
+    '#000080': 'Navy',
+    '#a52a2a': 'Brown',
+    '#ff7f50': 'Coral',
+    '#ff69b4': 'Hot Pink',
+    '#ffd700': 'Gold',
+    '#4b0082': 'Indigo',
+    '#ffc0cb': 'Pink',
+    '#dda0dd': 'Plum',
+    '#40e0d0': 'Turquoise',
+    '#ee82ee': 'Violet',
+    '#821515': 'Deep Maroon',
+    '#598554': 'Sage Green',
+    '#e3788c': 'Rose Pink',
+    '#f1ffe6': 'Mint Green',
+};
+
+const hexToRgb = (hex) => {
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    const fullHex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(fullHex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+};
+
+const getColorName = (hex) => {
+    if (!hex) return '';
+    if (!hex.startsWith('#')) {
+        return hex.charAt(0).toUpperCase() + hex.slice(1);
+    }
+    const target = hex.toLowerCase().trim();
+    if (colorNameMap[target]) return colorNameMap[target];
+
+    const targetRgb = hexToRgb(target);
+    if (!targetRgb) return hex;
+
+    let minDistance = Infinity;
+    let closestName = hex;
+
+    for (const [key, name] of Object.entries(colorNameMap)) {
+        const rgb = hexToRgb(key);
+        if (rgb) {
+            const distance = Math.sqrt(
+                Math.pow(targetRgb.r - rgb.r, 2) +
+                Math.pow(targetRgb.g - rgb.g, 2) +
+                Math.pow(targetRgb.b - rgb.b, 2)
+            );
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestName = name;
+            }
+        }
+    }
+    return closestName;
+};
+
 export default function ProductDetails() {
     const router = useRouter();
     const { addToCart } = useCart();
     const { id } = router.query;
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [adjacentProducts, setAdjacentProducts] = useState({ prev: null, next: null });
     
     // UI State
     const [selectedImage, setSelectedImage] = useState(0);
@@ -30,7 +106,6 @@ export default function ProductDetails() {
     const [selectedColor, setSelectedColor] = useState('');
     const [quantity, setQuantity] = useState(1);
     
-
 
     useEffect(() => {
         if (!id) return;
@@ -47,6 +122,18 @@ export default function ProductDetails() {
                         setSelectedSize(prod.size.split(',')[0].trim());
                     } else {
                         setSelectedSize('Standard');
+                    }
+
+                    // Fetch active products list to calculate adjacent IDs
+                    const listResponse = await axios.get(`${API_URL}/api/thiya/products`);
+                    if (listResponse.data.is_success) {
+                        const allProds = listResponse.data.data.filter(p => p.status === 'active');
+                        const currentIndex = allProds.findIndex(p => p.id.toString() === id.toString());
+                        if (currentIndex !== -1) {
+                            const prevProd = allProds[currentIndex - 1] || allProds[allProds.length - 1];
+                            const nextProd = allProds[currentIndex + 1] || allProds[0];
+                            setAdjacentProducts({ prev: prevProd, next: nextProd });
+                        }
                     }
                 }
             } catch (error) {
@@ -81,6 +168,55 @@ export default function ProductDetails() {
         <ThiyaLayout title={product.title} description={product.description ? product.description.substring(0, 150) + "..." : `Buy ${product.title} at unbeatable direct manufacturing price.`}>
             <div className="bg-white min-h-screen">
                 <div className="mx-auto max-w-screen-2xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+                    
+                    {/* Previous/Next Saree Navigation (Top Bar, Mobile-Responsive) */}
+                    <div className="flex justify-between items-center mb-8 border-b border-neutral-100 pb-4">
+                        <Link href="/products" className="text-xs sm:text-sm text-neutral-500 hover:text-black transition-colors flex items-center font-bold uppercase tracking-wider">
+                            <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                            Back to Shop
+                        </Link>
+                        {adjacentProducts.prev && adjacentProducts.next && (
+                            <div className="flex gap-2">
+                                <Link 
+                                    href={`/products/${adjacentProducts.prev.id}`}
+                                    className="flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 transition-all font-bold text-xs uppercase tracking-wider"
+                                    title={`Previous: ${adjacentProducts.prev.title}`}
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                                    Prev
+                                </Link>
+                                <Link 
+                                    href={`/products/${adjacentProducts.next.id}`}
+                                    className="flex items-center justify-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 transition-all font-bold text-xs uppercase tracking-wider"
+                                    title={`Next: ${adjacentProducts.next.title}`}
+                                >
+                                    Next
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"></path></svg>
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Desktop Viewport Floating Navigation Buttons */}
+                    {adjacentProducts.prev && (
+                        <Link 
+                            href={`/products/${adjacentProducts.prev.id}`}
+                            className="hidden xl:flex fixed left-8 top-1/2 -translate-y-1/2 z-40 bg-white hover:bg-black hover:text-white text-neutral-800 shadow-xl border border-neutral-200 h-14 w-14 rounded-full items-center justify-center transition-all group duration-300 hover:scale-105 active:scale-95"
+                            title={`Previous: ${adjacentProducts.prev.title}`}
+                        >
+                            <svg className="w-6 h-6 transform group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M15 19l-7-7 7-7"></path></svg>
+                        </Link>
+                    )}
+                    {adjacentProducts.next && (
+                        <Link 
+                            href={`/products/${adjacentProducts.next.id}`}
+                            className="hidden xl:flex fixed right-8 top-1/2 -translate-y-1/2 z-40 bg-white hover:bg-black hover:text-white text-neutral-800 shadow-xl border border-neutral-200 h-14 w-14 rounded-full items-center justify-center transition-all group duration-300 hover:scale-105 active:scale-95"
+                            title={`Next: ${adjacentProducts.next.title}`}
+                        >
+                            <svg className="w-6 h-6 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7"></path></svg>
+                        </Link>
+                    )}
+
                     <div className="lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
                         
                         {/* LEFT COLUMN: Image Gallery Layout */}
@@ -137,7 +273,7 @@ export default function ProductDetails() {
                             {/* Color Selection */}
                             {product.colors && product.colors.length > 0 && (
                                 <div className="mt-6">
-                                    <h3 className="text-sm font-bold text-neutral-900 mb-3">Color: <span className="font-normal text-neutral-600">{selectedColor}</span></h3>
+                                    <h3 className="text-sm font-bold text-neutral-900 mb-3">Color: <span className="font-normal text-neutral-600">{getColorName(selectedColor)}</span></h3>
                                     <div className="flex items-center gap-3">
                                         {product.colors.map(color => {
                                             // Handle hex codes vs names
@@ -148,11 +284,13 @@ export default function ProductDetails() {
                                                     key={color}
                                                     onClick={() => {
                                                         setSelectedColor(color);
-                                                        const idx = product.images?.findIndex(img => img.color === color);
+                                                        const idx = product.images?.findIndex(img => 
+                                                            img.color && img.color.toLowerCase().trim() === color.toLowerCase().trim()
+                                                        );
                                                         if (idx !== -1) setSelectedImage(idx);
                                                     }}
                                                     className={`h-8 w-8 rounded-full border-2 flex items-center justify-center ${selectedColor === color ? 'border-black' : 'border-transparent ring-1 ring-neutral-200'}`}
-                                                    title={color}
+                                                    title={getColorName(color)}
                                                 >
                                                     <span className="h-6 w-6 rounded-full border border-black/10" style={{ backgroundColor: bgColor }}></span>
                                                 </button>
