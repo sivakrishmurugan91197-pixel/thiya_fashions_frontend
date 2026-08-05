@@ -20,6 +20,8 @@ export default function Products() {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isSearchFocused, setIsSearchFocused] = useState(false);
     
     // Navigation States
     const [activeMenu, setActiveMenu] = useState('women'); // 'women', 'men', 'kids'
@@ -59,6 +61,13 @@ export default function Products() {
         ? products.filter((p) => p.category_id === activeCategory.id)
         : [];
 
+    const searchSuggestions = searchQuery.trim() !== ''
+        ? products.filter(p => 
+            p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+            (p.description && p.description.toLowerCase().includes(searchQuery.toLowerCase()))
+          ).slice(0, 8)
+        : [];
+
     // Helper to get image for a category
     const getCategoryImage = (category) => {
         // 1. Try to find the first product in this category
@@ -87,6 +96,106 @@ export default function Products() {
                     <h1 className="text-4xl sm:text-5xl font-black tracking-tight uppercase">Shop the Collection</h1>
                     <p className="text-neutral-400 mt-2 text-sm max-w-xl mx-auto font-medium">Discover premium materials, master manufacturing, and curated fashion lines built for you.</p>
                 </div>
+
+                {/* Vellore Location Selector and Search Bar Row */}
+                <div className="bg-white border-b border-neutral-200 py-4 px-4 sm:px-6 lg:px-8">
+                    <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+                        
+                        {/* Vellore Location Picker */}
+                        <div className="flex items-center gap-3 cursor-pointer group bg-neutral-100 px-4 py-2.5 rounded-lg hover:bg-neutral-200 transition-colors shrink-0">
+                            <svg className="w-5 h-5 text-neutral-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <div className="text-left">
+                                <p className="text-[9px] text-neutral-500 font-bold uppercase tracking-wider leading-none">Shop from</p>
+                                <p className="text-sm font-black text-neutral-900 leading-tight">Vellore</p>
+                            </div>
+                            <svg className="w-3.5 h-3.5 text-neutral-500 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+
+                        {/* Search Input Box */}
+                        <div className="relative w-full max-w-2xl flex border border-neutral-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-black transition-all bg-neutral-50">
+                            {/* All Products Dropdown Prefix */}
+                            <div className="hidden sm:flex items-center gap-1.5 px-4 bg-neutral-100 border-r border-neutral-300 text-xs font-bold text-neutral-600 uppercase select-none shrink-0">
+                                All Products
+                                <svg className="w-3 h-3 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+
+                            {/* Search Input */}
+                            <input 
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onFocus={() => setIsSearchFocused(true)}
+                                onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                                placeholder="Search in All Products"
+                                className="block w-full border-0 py-3.5 px-4 text-neutral-900 bg-transparent placeholder:text-neutral-400 focus:ring-0 text-sm font-medium"
+                            />
+
+                            {/* Search Magnifying Glass Button */}
+                            <button className="bg-neutral-800 hover:bg-black text-white px-6 flex items-center justify-center cursor-pointer transition-colors shrink-0">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </button>
+
+                            {/* Autocomplete suggestions dropdown list */}
+                            {isSearchFocused && searchSuggestions.length > 0 && (
+                                <div className="absolute top-full left-0 right-0 z-50 bg-white border border-neutral-250 rounded-b-lg shadow-2xl overflow-hidden max-h-80 overflow-y-auto mt-0.5 divide-y divide-neutral-100 animate-in fade-in slide-in-from-top-1 duration-100">
+                                    {searchSuggestions.map((prod) => (
+                                        <Link 
+                                            key={prod.id} 
+                                            href={`/products/${prod.id}`}
+                                            className="flex items-center gap-4 p-3 hover:bg-neutral-50 transition-colors text-left"
+                                        >
+                                            <div className="w-10 h-12 bg-neutral-100 rounded overflow-hidden shrink-0">
+                                                <img src={prod.images && prod.images.length > 0 ? formatImageUrl(prod.images[0]?.url) : 'https://via.placeholder.com/64'} alt="" className="w-full h-full object-cover" />
+                                            </div>
+                                            <div className="flex-grow min-w-0">
+                                                <p className="text-sm font-bold text-neutral-900 truncate leading-snug">{prod.title}</p>
+                                                <p className="text-xs text-neutral-500 truncate mt-0.5">₹{parseFloat(prod.price).toFixed(2)}</p>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                    </div>
+                </div>
+
+                {/* Horizontal Circle Product Navigation Slider */}
+                {products.length > 0 && (
+                    <div className="bg-white border-b border-neutral-200 py-6 px-4 sm:px-6 lg:px-8">
+                        <div className="max-w-7xl mx-auto">
+                            <div className="flex overflow-x-auto gap-6 py-2 select-none scrollbar-none scroll-smooth">
+                                {products.map((prod) => (
+                                    <Link 
+                                        key={prod.id} 
+                                        href={`/products/${prod.id}`}
+                                        className="flex flex-col items-center shrink-0 w-24 group"
+                                    >
+                                        <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-neutral-200 group-hover:border-pink-500 group-hover:scale-105 transition-all duration-300 shadow-sm relative p-0.5 bg-white">
+                                            <img 
+                                                src={prod.images && prod.images.length > 0 ? formatImageUrl(prod.images[0]?.url) : 'https://via.placeholder.com/100'} 
+                                                alt="" 
+                                                className="w-full h-full object-cover rounded-full" 
+                                            />
+                                        </div>
+                                        <p className="text-[10px] font-bold text-neutral-600 mt-2 text-center group-hover:text-black transition-colors max-w-full truncate px-1">
+                                            {prod.title}
+                                        </p>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Main Shop Navigation Tabs */}
                 <div className="bg-white border-b border-neutral-200 sticky top-20 z-40 shadow-sm">
