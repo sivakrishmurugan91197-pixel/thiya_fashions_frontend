@@ -2,6 +2,7 @@ import AdminLayout from '@/components/AdminLayout';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import LogoLoader from '@/components/LogoLoader';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -96,9 +97,7 @@ export default function AdminReports() {
                 </div>
 
                 {loading ? (
-                    <div className="flex justify-center py-12">
-                        <div className="w-8 h-8 border-t-2 border-black border-solid rounded-full animate-spin"></div>
-                    </div>
+                    <LogoLoader text="Generating Sales Reports..." />
                 ) : orders.length === 0 ? (
                     <p className="text-neutral-500 text-center py-12 font-medium">No orders found.</p>
                 ) : (

@@ -2,6 +2,7 @@ import AdminLayout from '@/components/AdminLayout';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import LogoLoader from '@/components/LogoLoader';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -106,6 +107,9 @@ export default function AdminProducts() {
     const [size, setSize] = useState('');
     const [categoryId, setCategoryId] = useState('');
     const [status, setStatus] = useState('active');
+    const [isNewArrival, setIsNewArrival] = useState(false);
+    const [isBestSeller, setIsBestSeller] = useState(false);
+    const [isTrending, setIsTrending] = useState(false);
     
     // Color Picker State
     const [colorList, setColorList] = useState([]);
@@ -130,6 +134,9 @@ export default function AdminProducts() {
         setColorList(product.colors || []);
         setDetails(product.details ? JSON.stringify(product.details, null, 2) : '');
         setExistingImages(product.images || []);
+        setIsNewArrival(!!product.is_new_arrival);
+        setIsBestSeller(!!product.is_best_seller);
+        setIsTrending(!!product.is_trending);
         setSelectedFiles([]);
         setPreviewUrls([]);
         setImageColors({});
@@ -149,6 +156,9 @@ export default function AdminProducts() {
         setColorList([]);
         setDetails('');
         setExistingImages([]);
+        setIsNewArrival(false);
+        setIsBestSeller(false);
+        setIsTrending(false);
         setSelectedFiles([]);
         setPreviewUrls([]);
         setImageColors({});
@@ -217,6 +227,9 @@ export default function AdminProducts() {
         formData.append('status', status);
         formData.append('colors', JSON.stringify(colorList));
         formData.append('details', details);
+        formData.append('is_new_arrival', isNewArrival);
+        formData.append('is_best_seller', isBestSeller);
+        formData.append('is_trending', isTrending);
         if (categoryId) formData.append('category_id', categoryId);
         
         if (editProduct) {
@@ -283,9 +296,7 @@ export default function AdminProducts() {
             {/* Product List */}
             <div className="bg-white p-4 sm:p-8 rounded-xl shadow-sm border border-neutral-200">
                 {loading ? (
-                    <div className="flex justify-center py-12">
-                        <div className="w-8 h-8 border-t-2 border-black border-solid rounded-full animate-spin"></div>
-                    </div>
+                    <LogoLoader text="Loading Catalog Products..." />
                 ) : products.length === 0 ? (
                     <div className="text-center py-20">
                         <svg className="mx-auto h-12 w-12 text-neutral-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
@@ -442,6 +453,56 @@ export default function AdminProducts() {
                                                 </div>
                                             );
                                         })()}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-3">Featured Collections</label>
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-neutral-50 p-4 rounded-lg border border-neutral-200">
+                                        <label className="relative flex items-start cursor-pointer select-none">
+                                            <div className="flex h-5 items-center">
+                                                <input 
+                                                    type="checkbox" 
+                                                    checked={isNewArrival} 
+                                                    onChange={(e) => setIsNewArrival(e.target.checked)}
+                                                    className="h-4 w-4 rounded border-neutral-300 text-black focus:ring-black cursor-pointer"
+                                                />
+                                            </div>
+                                            <div className="ml-2 text-xs">
+                                                <span className="font-bold text-neutral-900 block uppercase tracking-wider text-[10px]">New Arrivals</span>
+                                                <span className="text-neutral-500 text-[10px] font-medium leading-none">Hot Fresh New Arrivals</span>
+                                            </div>
+                                        </label>
+
+                                        <label className="relative flex items-start cursor-pointer select-none">
+                                            <div className="flex h-5 items-center">
+                                                <input 
+                                                    type="checkbox" 
+                                                    checked={isBestSeller} 
+                                                    onChange={(e) => setIsBestSeller(e.target.checked)}
+                                                    className="h-4 w-4 rounded border-neutral-300 text-black focus:ring-black cursor-pointer"
+                                                />
+                                            </div>
+                                            <div className="ml-2 text-xs">
+                                                <span className="font-bold text-neutral-900 block uppercase tracking-wider text-[10px]">Best Sellers</span>
+                                                <span className="text-neutral-500 text-[10px] font-medium leading-none">Top Selling Products</span>
+                                            </div>
+                                        </label>
+
+                                        <label className="relative flex items-start cursor-pointer select-none">
+                                            <div className="flex h-5 items-center">
+                                                <input 
+                                                    type="checkbox" 
+                                                    checked={isTrending} 
+                                                    onChange={(e) => setIsTrending(e.target.checked)}
+                                                    className="h-4 w-4 rounded border-neutral-300 text-black focus:ring-black cursor-pointer"
+                                                />
+                                            </div>
+                                            <div className="ml-2 text-xs">
+                                                <span className="font-bold text-neutral-900 block uppercase tracking-wider text-[10px]">Trending Outfits</span>
+                                                <span className="text-neutral-500 text-[10px] font-medium leading-none">Popular trending styles</span>
+                                            </div>
+                                        </label>
                                     </div>
                                 </div>
                                 

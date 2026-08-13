@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { useCart } from '@/contexts/CartContext';
+import LogoLoader from '@/components/LogoLoader';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -214,7 +215,7 @@ export default function CheckoutPage() {
         return (
             <ThiyaLayout title="Secure Checkout" description="Complete your Thiya Fashions checkout details and pay securely using Razorpay.">
                 <div className="flex justify-center items-center min-h-[60vh] bg-white">
-                    <div className="w-16 h-16 border-t-2 border-pink-500 rounded-full animate-spin"></div>
+                    <LogoLoader text="Loading Checkout Details..." />
                 </div>
             </ThiyaLayout>
         );

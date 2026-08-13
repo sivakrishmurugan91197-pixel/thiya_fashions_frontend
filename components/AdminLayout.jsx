@@ -59,6 +59,30 @@ export default function AdminLayout({ children, title }) {
                         <span className="font-bold text-sm tracking-wide">Products</span>
                     </Link>
 
+                    {/* Feedbacks Link */}
+                    <Link 
+                        href="/admin/feedbacks" 
+                        onClick={() => setIsMobileOpen(false)}
+                        className={`flex items-center px-4 py-3 rounded-md transition-all duration-200 group ${currentPath === '/admin/feedbacks' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-neutral-400 hover:bg-neutral-900 hover:text-white'}`}
+                    >
+                        <svg className="w-5 h-5 mr-3 transition-colors text-neutral-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        <span className="font-bold text-sm tracking-wide">Feedbacks</span>
+                    </Link>
+
+                    {/* Video Showcase Link */}
+                    <Link 
+                        href="/admin/video-banner" 
+                        onClick={() => setIsMobileOpen(false)}
+                        className={`flex items-center px-4 py-3 rounded-md transition-all duration-200 group ${currentPath === '/admin/video-banner' ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-neutral-400 hover:bg-neutral-900 hover:text-white'}`}
+                    >
+                        <svg className="w-5 h-5 mr-3 transition-colors text-neutral-500 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-.553.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                        <span className="font-bold text-sm tracking-wide">Video Showcase</span>
+                    </Link>
+
                     {/* Reports Dropdown Group */}
                     <div>
                         <button 

@@ -2,6 +2,7 @@ import AdminLayout from '@/components/AdminLayout';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import LogoLoader from '@/components/LogoLoader';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -98,9 +99,7 @@ export default function AdminCategories() {
             {/* Category List */}
             <div className="bg-white p-4 sm:p-8 rounded-xl shadow-sm border border-neutral-200">
                 {loading ? (
-                    <div className="flex justify-center py-12">
-                        <div className="w-8 h-8 border-t-2 border-black border-solid rounded-full animate-spin"></div>
-                    </div>
+                    <LogoLoader text="Loading Categories..." />
                 ) : categories.length === 0 ? (
                     <div className="text-center py-20">
                         <svg className="mx-auto h-12 w-12 text-neutral-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>

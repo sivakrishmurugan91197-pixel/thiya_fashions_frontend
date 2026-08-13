@@ -242,3 +242,69 @@ body {
 .animate-menu-in {
   animation: menuIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Infinite Marquee Animation for Feedbacks */
+@keyframes marquee-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee-left {
+  display: flex;
+  width: max-content;
+  animation: marquee-left 45s linear infinite;
+}
+
+.animate-marquee-left:hover {
+  animation-play-state: paused;
+}
+
+/* Ken Burns slow pan and zoom */
+@keyframes ken-burns {
+  0% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.12) translate(-2%, -1%); }
+  100% { transform: scale(1) translate(0, 0); }
+}
+.animate-ken-burns {
+  animation: ken-burns 28s ease-in-out infinite;
+}
+
+/* Light leak cinematic sweep */
+@keyframes light-leak {
+  0% { transform: translateX(-150%) skewX(-30deg); opacity: 0.1; }
+  35% { opacity: 0.3; }
+  60% { opacity: 0.1; }
+  100% { transform: translateX(150%) skewX(-30deg); opacity: 0.1; }
+}
+.animate-light-leak {
+  animation: light-leak 8s ease-in-out infinite;
+}
+
+/* 3D auto swaying for cinematic canvas */
+@keyframes sway-3d {
+  0% { transform: perspective(1000px) rotateX(1deg) rotateY(-2deg); }
+  50% { transform: perspective(1000px) rotateX(-1deg) rotateY(2deg); }
+  100% { transform: perspective(1000px) rotateX(1deg) rotateY(-2deg); }
+}
+.animate-sway-3d {
+  animation: sway-3d 10s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+/* Timeline scanner crawling */
+@keyframes timeline-crawl {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+.animate-timeline-crawl {
+  animation: timeline-crawl 12s linear infinite;
+}
+
+/* Live pulse */
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.2); }
+}
+.animate-live-pulse {
+  animation: live-pulse 2s infinite ease-in-out;
+}

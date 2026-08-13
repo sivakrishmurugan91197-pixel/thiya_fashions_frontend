@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useCart } from '@/contexts/CartContext';
+import LogoLoader from '@/components/LogoLoader';
 import Link from 'next/link';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
@@ -148,7 +149,13 @@ export default function ProductDetails() {
 
 
     if (loading) {
-        return <ThiyaLayout title="Loading Product..." description="Loading premium products from Thiya Fashions."><div className="flex justify-center items-center h-screen bg-white"><div className="w-16 h-16 border-t-2 border-black rounded-full animate-spin"></div></div></ThiyaLayout>;
+        return (
+            <ThiyaLayout title="Loading Product..." description="Loading premium products from Thiya Fashions.">
+                <div className="flex items-center justify-center min-h-screen bg-white">
+                    <LogoLoader text="Loading Saree Details..." />
+                </div>
+            </ThiyaLayout>
+        );
     }
 
     if (!product) {
