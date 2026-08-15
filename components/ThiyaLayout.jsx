@@ -30,7 +30,7 @@ export default function ThiyaLayout({ children, title, description }) {
                 <meta property="og:description" content={description || "Wholesale & retail premium clothing direct from manufacturers."} />
                 <meta property="og:image" content="/images/thiya_logo.png" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/images/thiya_logo.png" type="image/png" />
             </Head>
             {/* Header */}
             <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-neutral-200">
