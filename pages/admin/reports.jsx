@@ -253,7 +253,9 @@ export default function AdminReports() {
                                         </div>
                                         <div className="flex justify-between"><span className="text-neutral-500">Transaction ID:</span> <span className="font-mono text-xs">{selectedOrder.payment_id}</span></div>
                                         <div className="flex justify-between pt-2"><span className="text-neutral-500">Subtotal:</span> <span className="font-medium text-neutral-900">₹{(parseFloat(selectedOrder.amount_paid) * (selectedOrder.quantity || 1)).toFixed(2)}</span></div>
-                                        <div className="flex justify-between"><span className="text-neutral-500">GST (5%):</span> <span className="font-medium text-neutral-900">₹{parseFloat(selectedOrder.gst_amount || 0).toFixed(2)}</span></div>
+                                        {parseFloat(selectedOrder.gst_amount || 0) > 0 && (
+                                            <div className="flex justify-between"><span className="text-neutral-500">GST (5%):</span> <span className="font-medium text-neutral-900">₹{parseFloat(selectedOrder.gst_amount).toFixed(2)}</span></div>
+                                        )}
                                         <div className="flex justify-between border-t border-neutral-200 pt-3 mt-2">
                                             <span className="font-bold text-neutral-900">Total Paid:</span> 
                                             <span className="font-black text-lg text-neutral-900">₹{parseFloat(selectedOrder.total_amount || selectedOrder.amount_paid).toFixed(2)}</span>

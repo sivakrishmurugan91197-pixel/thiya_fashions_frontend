@@ -164,7 +164,7 @@ export default function ProductDetails() {
 
     const unitPrice = parseFloat(product.price) - parseFloat(product.discount_amount || 0);
     const subtotal = unitPrice * quantity;
-    const gstAmount = subtotal * 0.05;
+    const gstAmount = 0;
     const totalAmount = subtotal + gstAmount;
 
     // Default sizes if none provided

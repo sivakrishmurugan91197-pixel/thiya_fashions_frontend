@@ -269,7 +269,7 @@ export default function ThiyaLayout({ children, title, description }) {
                                         <span>Subtotal</span>
                                         <span className="text-lg font-black">₹{cartTotal.toFixed(2)}</span>
                                     </div>
-                                    <p className="text-[11px] text-neutral-500 font-medium">Shipping & 5% GST will be calculated at checkout.</p>
+                                    <p className="text-[11px] text-neutral-500 font-medium">Shipping will be calculated at checkout.</p>
                                     <div className="grid grid-cols-1 gap-2">
                                         <button 
                                             onClick={() => {

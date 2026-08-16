@@ -235,7 +235,7 @@ export default function CheckoutPage() {
     }
 
     const subtotal = checkoutItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const gstAmount = subtotal * 0.05;
+    const gstAmount = 0;
     const totalAmount = subtotal + gstAmount;
 
     return (
@@ -413,10 +413,6 @@ export default function CheckoutPage() {
                                 <div className="flex justify-between">
                                     <span>Subtotal:</span>
                                     <span className="text-neutral-900">₹{subtotal.toFixed(2)}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>GST (5%):</span>
-                                    <span className="text-neutral-900">₹{gstAmount.toFixed(2)}</span>
                                 </div>
                             </div>
 
