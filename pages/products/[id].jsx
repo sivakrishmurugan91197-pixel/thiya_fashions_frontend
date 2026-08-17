@@ -299,7 +299,7 @@ export default function ProductDetails() {
                                                 e.stopPropagation();
                                                 setSelectedImage((prev) => (prev - 1 + product.images.length) % product.images.length);
                                             }}
-                                            className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/75 hover:bg-white text-neutral-800 hover:text-black p-2.5 rounded-full shadow-md backdrop-blur-sm transition-all focus:outline-none z-25 opacity-100 md:opacity-0 md:group-hover:opacity-100 duration-200 active:scale-90"
+                                            className="absolute left-3 top-1/2 -translate-y-1/2 bg-white hover:bg-neutral-100 text-neutral-900 p-2.5 rounded-full shadow-lg border border-neutral-200 transition-all focus:outline-none z-25 active:scale-90 duration-200"
                                             aria-label="Previous image"
                                         >
                                             <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -311,7 +311,7 @@ export default function ProductDetails() {
                                                 e.stopPropagation();
                                                 setSelectedImage((prev) => (prev + 1) % product.images.length);
                                             }}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/75 hover:bg-white text-neutral-800 hover:text-black p-2.5 rounded-full shadow-md backdrop-blur-sm transition-all focus:outline-none z-25 opacity-100 md:opacity-0 md:group-hover:opacity-100 duration-200 active:scale-90"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 bg-white hover:bg-neutral-100 text-neutral-900 p-2.5 rounded-full shadow-lg border border-neutral-200 transition-all focus:outline-none z-25 active:scale-90 duration-200"
                                             aria-label="Next image"
                                         >
                                             <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
