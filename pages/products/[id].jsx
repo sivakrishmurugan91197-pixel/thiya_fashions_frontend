@@ -93,6 +93,18 @@ const getColorName = (hex) => {
     return closestName;
 };
 
+const parseSizes = (sizeStr) => {
+    if (!sizeStr || !sizeStr.trim()) return [];
+    if (sizeStr.includes(',')) {
+        return sizeStr.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    const parts = sizeStr.split(/\s+/).map(s => s.trim()).filter(Boolean);
+    if (parts.length > 1 && parts.every(p => p.length <= 5)) {
+        return parts;
+    }
+    return [sizeStr.trim()];
+};
+
 export default function ProductDetails() {
     const router = useRouter();
     const { addToCart } = useCart();
@@ -119,8 +131,9 @@ export default function ProductDetails() {
                     if (prod.colors && prod.colors.length > 0) {
                         setSelectedColor(prod.colors[0]);
                     }
-                    if (prod.size && prod.size.trim()) {
-                        setSelectedSize(prod.size.split(',')[0].trim());
+                    const parsedSizes = parseSizes(prod.size);
+                    if (parsedSizes.length > 0) {
+                        setSelectedSize(parsedSizes[0]);
                     } else {
                         setSelectedSize('Standard');
                     }
@@ -146,6 +159,14 @@ export default function ProductDetails() {
         fetchProduct();
     }, [id]);
 
+    useEffect(() => {
+        if (!product || !product.images || product.images.length <= 1) return;
+        const interval = setInterval(() => {
+            setSelectedImage((prev) => (prev + 1) % product.images.length);
+        }, 4500);
+        return () => clearInterval(interval);
+    }, [product, selectedImage]);
+
 
 
     if (loading) {
@@ -168,7 +189,7 @@ export default function ProductDetails() {
     const totalAmount = subtotal + gstAmount;
 
     // Default sizes if none provided
-    const sizes = product.size && product.size.trim() ? product.size.split(',').map(s => s.trim()).filter(Boolean) : [];
+    const sizes = parseSizes(product.size);
     const detailsKeys = product.details ? Object.keys(product.details) : [];
 
     return (
@@ -245,17 +266,59 @@ export default function ProductDetails() {
                                     ))}
                                 </div>
                             )}
-                            {/* Main Image */}
-                            <div className="aspect-[3/4] w-full overflow-hidden bg-neutral-100 rounded-sm flex-grow relative">
-                                <img
-                                    src={product.images && product.images.length > 0 ? formatImageUrl(product.images[selectedImage]?.url) : 'https://via.placeholder.com/800x1000?text=Premium+Collection'}
-                                    alt={product.title}
-                                    className="h-full w-full object-cover object-top"
-                                />
+                            {/* Main Image Slider with Premium Cross-fade Transition */}
+                            <div className="aspect-[3/4] w-full overflow-hidden bg-neutral-100 rounded-sm flex-grow relative group">
+                                {product.images && product.images.length > 0 ? (
+                                    product.images.map((img, i) => (
+                                        <img
+                                            key={i}
+                                            src={formatImageUrl(img.url)}
+                                            alt={`${product.title} - View ${i + 1}`}
+                                            className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-700 ease-in-out ${selectedImage === i ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+                                        />
+                                    ))
+                                ) : (
+                                    <img
+                                        src="https://via.placeholder.com/800x1000?text=Premium+Collection"
+                                        alt={product.title}
+                                        className="h-full w-full object-cover object-top"
+                                    />
+                                )}
+                                
                                 {product.discount_amount > 0 && (
-                                    <div className="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">
+                                    <div className="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded z-20">
                                         SALE
                                     </div>
+                                )}
+
+                                {/* Slider Navigation Arrow Buttons */}
+                                {product.images && product.images.length > 1 && (
+                                    <>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setSelectedImage((prev) => (prev - 1 + product.images.length) % product.images.length);
+                                            }}
+                                            className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/75 hover:bg-white text-neutral-800 hover:text-black p-2.5 rounded-full shadow-md backdrop-blur-sm transition-all focus:outline-none z-25 opacity-100 md:opacity-0 md:group-hover:opacity-100 duration-200 active:scale-90"
+                                            aria-label="Previous image"
+                                        >
+                                            <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                                            </svg>
+                                        </button>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setSelectedImage((prev) => (prev + 1) % product.images.length);
+                                            }}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/75 hover:bg-white text-neutral-800 hover:text-black p-2.5 rounded-full shadow-md backdrop-blur-sm transition-all focus:outline-none z-25 opacity-100 md:opacity-0 md:group-hover:opacity-100 duration-200 active:scale-90"
+                                            aria-label="Next image"
+                                        >
+                                            <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </button>
+                                    </>
                                 )}
                             </div>
                         </div>
@@ -281,28 +344,22 @@ export default function ProductDetails() {
                             {product.colors && product.colors.length > 0 && (
                                 <div className="mt-6">
                                     <h3 className="text-sm font-bold text-neutral-900 mb-3">Color: <span className="font-normal text-neutral-600">{getColorName(selectedColor)}</span></h3>
-                                    <div className="flex items-center gap-3">
-                                        {product.colors.map(color => {
-                                            // Handle hex codes vs names
-                                            const isHex = color.startsWith('#');
-                                            const bgColor = isHex ? color : color.toLowerCase();
-                                            return (
-                                                <button
-                                                    key={color}
-                                                    onClick={() => {
-                                                        setSelectedColor(color);
-                                                        const idx = product.images?.findIndex(img => 
-                                                            img.color && img.color.toLowerCase().trim() === color.toLowerCase().trim()
-                                                        );
-                                                        if (idx !== -1) setSelectedImage(idx);
-                                                    }}
-                                                    className={`h-8 w-8 rounded-full border-2 flex items-center justify-center ${selectedColor === color ? 'border-black' : 'border-transparent ring-1 ring-neutral-200'}`}
-                                                    title={getColorName(color)}
-                                                >
-                                                    <span className="h-6 w-6 rounded-full border border-black/10" style={{ backgroundColor: bgColor }}></span>
-                                                </button>
-                                            )
-                                        })}
+                                    <div className="flex flex-wrap gap-2">
+                                        {product.colors.map(color => (
+                                            <button
+                                                key={color}
+                                                onClick={() => {
+                                                    setSelectedColor(color);
+                                                    const idx = product.images?.findIndex(img => 
+                                                        img.color && img.color.toLowerCase().trim() === color.toLowerCase().trim()
+                                                    );
+                                                    if (idx !== -1) setSelectedImage(idx);
+                                                }}
+                                                className={`px-3 py-2 text-xs font-bold uppercase transition-all rounded ${selectedColor === color ? 'bg-neutral-900 text-white' : 'bg-white text-neutral-900 border border-neutral-300 hover:border-black'}`}
+                                            >
+                                                {getColorName(color)}
+                                            </button>
+                                        ))}
                                     </div>
                                 </div>
                             )}

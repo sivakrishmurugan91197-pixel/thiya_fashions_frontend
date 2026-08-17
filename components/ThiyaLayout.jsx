@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
 import { useRouter } from 'next/router';
@@ -19,6 +20,7 @@ const formatImageUrl = (url) => {
 export default function ThiyaLayout({ children, title, description }) {
     const { cart, cartCount, cartTotal, updateQuantity, removeFromCart, isCartOpen, setIsCartOpen } = useCart();
     const router = useRouter();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     return (
         <div className="min-h-screen bg-neutral-50 flex flex-col font-sans text-neutral-900">
@@ -68,11 +70,15 @@ export default function ThiyaLayout({ children, title, description }) {
                                 )}
                             </button>
                             
-                            <div className="md:hidden">
-                                <Link href="/" className="flex items-center">
-                                    <img src="/images/thiya_logo.png" alt="Thiya Fashions Logo" className="h-10 w-10 object-cover rounded-full shadow-md" />
-                                </Link>
-                            </div>
+                            <button
+                                onClick={() => setIsMobileMenuOpen(true)}
+                                className="md:hidden text-neutral-700 hover:text-pink-600 transition-colors p-2 focus:outline-none flex items-center justify-center rounded-full hover:bg-neutral-100/85 active:scale-95 duration-100"
+                                aria-label="Open Navigation Menu"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -289,6 +295,80 @@ export default function ThiyaLayout({ children, title, description }) {
                                     </div>
                                 </div>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Sliding Mobile Menu Drawer */}
+            {isMobileMenuOpen && (
+                <div className="fixed inset-0 z-[100] overflow-hidden animate-in fade-in duration-200">
+                    <div 
+                        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    />
+                    
+                    <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                        <div className="pointer-events-auto w-screen max-w-xs transform transition-transform duration-300 ease-in-out bg-white shadow-2xl flex flex-col h-full border-l border-neutral-200">
+                            {/* Drawer Header */}
+                            <div className="px-6 py-6 border-b border-neutral-200 flex justify-between items-center bg-neutral-50">
+                                <h2 className="text-lg font-black tracking-tight text-neutral-900 uppercase flex items-center gap-2">
+                                    Navigation
+                                </h2>
+                                <button 
+                                    onClick={() => setIsMobileMenuOpen(false)} 
+                                    className="text-neutral-400 hover:text-black transition-colors rounded-full p-1.5 hover:bg-neutral-200"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            
+                            {/* Drawer Body - Links */}
+                            <div className="flex-grow overflow-y-auto px-6 py-8 flex flex-col justify-between">
+                                <nav className="flex flex-col gap-6">
+                                    <Link 
+                                        href="/" 
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={`text-base font-black uppercase tracking-wider transition-colors py-2 border-b border-neutral-100 ${router.pathname === '/' ? 'text-pink-600 border-pink-500/20' : 'text-neutral-800 hover:text-pink-600'}`}
+                                    >
+                                        Home
+                                    </Link>
+                                    <Link 
+                                        href="/products" 
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={`text-base font-black uppercase tracking-wider transition-colors py-2 border-b border-neutral-100 ${router.pathname.startsWith('/products') ? 'text-pink-600 border-pink-500/20' : 'text-neutral-800 hover:text-pink-600'}`}
+                                    >
+                                        Shop
+                                    </Link>
+                                    <Link 
+                                        href="/about" 
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={`text-base font-black uppercase tracking-wider transition-colors py-2 border-b border-neutral-100 ${router.pathname === '/about' ? 'text-pink-600 border-pink-500/20' : 'text-neutral-800 hover:text-pink-600'}`}
+                                    >
+                                        About Us
+                                    </Link>
+                                    <Link 
+                                        href="/contact" 
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={`text-base font-black uppercase tracking-wider transition-colors py-2 border-b border-neutral-100 ${router.pathname === '/contact' ? 'text-pink-600 border-pink-500/20' : 'text-neutral-800 hover:text-pink-600'}`}
+                                    >
+                                        Contact
+                                    </Link>
+                                </nav>
+                                
+                                {/* Drawer Footer */}
+                                <div className="border-t border-neutral-200 pt-6 mt-8">
+                                    <div className="flex items-center gap-3">
+                                        <img src="/images/thiya_logo.png" alt="Thiya Fashions Logo" className="h-10 w-10 object-cover rounded-full shadow-md" />
+                                        <div>
+                                            <h4 className="text-sm font-black uppercase text-neutral-900">Thiya Fashions</h4>
+                                            <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider mt-0.5">Wholesale, Retail & Manufacture</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

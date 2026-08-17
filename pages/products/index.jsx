@@ -17,6 +17,16 @@ const formatImageUrl = (url) => {
     return url;
 };
 
+const parseFirstSize = (sizeStr) => {
+    if (!sizeStr || !sizeStr.trim()) return '';
+    if (sizeStr.includes(',')) {
+        return sizeStr.split(',')[0].trim();
+    }
+    const parts = sizeStr.split(/\s+/).map(s => s.trim()).filter(Boolean);
+    if (parts.length > 0) return parts[0];
+    return sizeStr.trim();
+};
+
 export default function Products() {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -69,6 +79,13 @@ export default function Products() {
           ).slice(0, 8)
         : [];
 
+    const searchResults = searchQuery.trim() !== ''
+        ? products.filter(p => 
+            p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+            (p.description && p.description.toLowerCase().includes(searchQuery.toLowerCase()))
+          )
+        : [];
+
     // Helper to get image for a category
     const getCategoryImage = (category) => {
         // 1. Try to find the first product in this category
@@ -119,6 +136,11 @@ export default function Products() {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onFocus={() => setIsSearchFocused(true)}
                                 onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.target.blur();
+                                    }
+                                }}
                                 placeholder="Search in All Products"
                                 className="block w-full border-0 py-3.5 px-4 text-neutral-900 bg-transparent placeholder:text-neutral-400 focus:ring-0 text-sm font-medium"
                             />
@@ -193,6 +215,7 @@ export default function Products() {
                                     onClick={() => {
                                         setActiveMenu(menu);
                                         setActiveCategory(null); // Reset category selection on menu change
+                                        setSearchQuery(''); // Clear search query on tab change
                                     }}
                                     className={`py-5 text-sm font-black uppercase tracking-widest border-b-2 transition-all relative ${
                                         activeMenu === menu
@@ -215,6 +238,101 @@ export default function Products() {
                     {loading ? (
                         <div className="py-12">
                             <LogoLoader text="Loading Products..." />
+                        </div>
+                    ) : searchQuery.trim() !== '' ? (
+                        /* VIEW 3: SEARCH RESULTS GRID */
+                        <div>
+                            <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-neutral-200">
+                                <div>
+                                    <button
+                                        onClick={() => setSearchQuery('')}
+                                        className="inline-flex items-center text-xs font-bold text-neutral-500 hover:text-black uppercase tracking-wider transition-colors mb-2 gap-1.5"
+                                    >
+                                        ← Clear Search
+                                    </button>
+                                    <h2 className="text-2xl sm:text-3xl font-black text-neutral-900 uppercase tracking-tight">
+                                        Search Results for "{searchQuery}"
+                                    </h2>
+                                </div>
+                                <span className="text-xs font-bold text-neutral-400 uppercase tracking-widest bg-neutral-100 py-1.5 px-3 rounded-full border border-neutral-200">
+                                    {searchResults.length} items found
+                                </span>
+                            </div>
+
+                            {searchResults.length === 0 ? (
+                                <div className="text-center py-20 bg-white rounded-xl border border-neutral-200">
+                                    <svg className="mx-auto h-12 w-12 text-neutral-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                    <p className="text-neutral-500 font-bold uppercase tracking-wider text-sm">No products found matching "{searchQuery}"</p>
+                                    <p className="text-neutral-400 text-xs mt-1">Try searching with other keywords or clear search to browse categories.</p>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                                    {searchResults.map((product) => {
+                                        const originalPrice = parseFloat(product.price);
+                                        const discount = parseFloat(product.discount_amount || 0);
+                                        const finalPrice = originalPrice - discount;
+                                        
+                                        return (
+                                            <Link
+                                                key={product.id}
+                                                href={`/products/${product.id}`}
+                                                className="group flex flex-col bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl border border-neutral-200 transition-all duration-300 hover:scale-[1.01]"
+                                            >
+                                                {/* Product Image */}
+                                                <div className="aspect-[3/4] w-full overflow-hidden bg-neutral-100 relative">
+                                                    <img
+                                                        src={product.images && product.images.length > 0 ? formatImageUrl(product.images[0]?.url) : 'https://via.placeholder.com/400x500?text=Premium+Collection'}
+                                                        alt={product.title}
+                                                        className="h-full w-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                                                    />
+                                                    {discount > 0 && (
+                                                        <span className="absolute top-3 right-3 bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded tracking-wider uppercase">
+                                                            Sale
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                {/* Product Body */}
+                                                <div className="p-5 flex flex-col flex-grow">
+                                                    <div className="flex justify-between items-start gap-2 mb-1">
+                                                        <span className="text-[10px] font-bold text-neutral-400 tracking-widest uppercase">
+                                                            {categories.find(c => c.id === product.category_id)?.name || 'Product'}
+                                                        </span>
+                                                        {product.size && (
+                                                            <span className="text-[10px] font-bold text-neutral-600 bg-neutral-100 px-1.5 py-0.5 rounded border border-neutral-200">
+                                                                {parseFirstSize(product.size)}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    
+                                                    <h3 className="text-base font-bold text-neutral-900 truncate mb-3">
+                                                        {product.title}
+                                                    </h3>
+
+                                                    {/* Price and Action */}
+                                                    <div className="mt-auto pt-3 border-t border-neutral-100 flex items-center justify-between">
+                                                        <div>
+                                                            <p className="text-lg font-black text-neutral-900">
+                                                                ₹{finalPrice.toFixed(2)}
+                                                            </p>
+                                                            {discount > 0 && (
+                                                                <p className="text-xs text-neutral-400 line-through">
+                                                                    ₹{originalPrice.toFixed(2)}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                        <span className="bg-black text-white hover:bg-neutral-800 text-xs font-bold py-2 px-4 rounded transition-colors uppercase tracking-wider font-bold">
+                                                            View
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
                     ) : !activeCategory ? (
                         
@@ -332,7 +450,7 @@ export default function Products() {
                                                         </span>
                                                         {product.size && (
                                                             <span className="text-[10px] font-bold text-neutral-600 bg-neutral-100 px-1.5 py-0.5 rounded border border-neutral-200">
-                                                                {product.size.split(',')[0]}
+                                                                {parseFirstSize(product.size)}
                                                             </span>
                                                         )}
                                                     </div>
