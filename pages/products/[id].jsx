@@ -299,10 +299,10 @@ export default function ProductDetails() {
                                                 e.stopPropagation();
                                                 setSelectedImage((prev) => (prev - 1 + product.images.length) % product.images.length);
                                             }}
-                                            className="absolute left-3 top-1/2 -translate-y-1/2 bg-white hover:bg-neutral-100 text-neutral-900 p-2.5 rounded-full shadow-lg border border-neutral-200 transition-all focus:outline-none z-25 active:scale-90 duration-200"
+                                            className="absolute left-3 top-1/2 -translate-y-1/2 bg-white hover:bg-neutral-100 text-neutral-900 p-2.5 rounded-full shadow-lg border border-neutral-200 transition-all focus:outline-none z-30 active:scale-90 duration-200"
                                             aria-label="Previous image"
                                         >
-                                            <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                                             </svg>
                                         </button>
@@ -311,10 +311,10 @@ export default function ProductDetails() {
                                                 e.stopPropagation();
                                                 setSelectedImage((prev) => (prev + 1) % product.images.length);
                                             }}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 bg-white hover:bg-neutral-100 text-neutral-900 p-2.5 rounded-full shadow-lg border border-neutral-200 transition-all focus:outline-none z-25 active:scale-90 duration-200"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 bg-white hover:bg-neutral-100 text-neutral-900 p-2.5 rounded-full shadow-lg border border-neutral-200 transition-all focus:outline-none z-30 active:scale-90 duration-200"
                                             aria-label="Next image"
                                         >
-                                            <svg className="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                                             </svg>
                                         </button>
