@@ -107,6 +107,7 @@ export default function AdminProducts() {
     const [size, setSize] = useState('');
     const [categoryId, setCategoryId] = useState('');
     const [status, setStatus] = useState('active');
+    const [displayOrder, setDisplayOrder] = useState('9999');
     const [isNewArrival, setIsNewArrival] = useState(false);
     const [isBestSeller, setIsBestSeller] = useState(false);
     const [isTrending, setIsTrending] = useState(false);
@@ -131,6 +132,7 @@ export default function AdminProducts() {
         setSize(product.size || '');
         setCategoryId(product.category_id || '');
         setStatus(product.status || 'active');
+        setDisplayOrder(product.display_order !== undefined ? String(product.display_order) : '9999');
         setColorList(product.colors || []);
         setDetails(product.details ? JSON.stringify(product.details, null, 2) : '');
         setExistingImages(product.images || []);
@@ -153,6 +155,7 @@ export default function AdminProducts() {
         setSize('');
         setCategoryId('');
         setStatus('active');
+        setDisplayOrder('9999');
         setColorList([]);
         setDetails('');
         setExistingImages([]);
@@ -230,6 +233,7 @@ export default function AdminProducts() {
         formData.append('is_new_arrival', isNewArrival);
         formData.append('is_best_seller', isBestSeller);
         formData.append('is_trending', isTrending);
+        formData.append('display_order', displayOrder);
         if (categoryId) formData.append('category_id', categoryId);
         
         if (editProduct) {
@@ -312,6 +316,7 @@ export default function AdminProducts() {
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Category</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Price</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Order</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Size</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Action</th>
                                 </tr>
@@ -351,6 +356,9 @@ export default function AdminProducts() {
                                             }`}>
                                                 {product.status || 'active'}
                                             </span>
+                                        </td>
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-neutral-900 font-black">
+                                            {product.display_order !== undefined ? product.display_order : '9999'}
                                         </td>
                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-neutral-500 font-medium">
                                             <span className="inline-flex items-center rounded bg-neutral-100 px-2.5 py-1 text-xs font-bold text-neutral-700 ring-1 ring-inset ring-neutral-300">
@@ -428,13 +436,17 @@ export default function AdminProducts() {
                                     </div>
                                 </div>
                                 
-                                <div className="grid grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                                     <div>
                                         <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2">Status</label>
                                         <select value={status} onChange={(e) => setStatus(e.target.value)} className="block w-full rounded-md border-0 py-3 px-4 text-neutral-900 ring-1 ring-inset ring-neutral-300 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm transition-all bg-neutral-50 font-bold uppercase">
                                             <option value="active">Active</option>
                                             <option value="inactive">Inactive</option>
                                         </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2">Display Order</label>
+                                        <input type="number" value={displayOrder} onChange={(e) => setDisplayOrder(e.target.value)} placeholder="e.g. 1" className="block w-full rounded-md border-0 py-3 px-4 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm transition-all bg-neutral-50 font-mono" />
                                     </div>
                                     <div>
                                         {(() => {
