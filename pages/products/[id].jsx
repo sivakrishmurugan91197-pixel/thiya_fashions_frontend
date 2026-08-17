@@ -159,13 +159,7 @@ export default function ProductDetails() {
         fetchProduct();
     }, [id]);
 
-    useEffect(() => {
-        if (!product || !product.images || product.images.length <= 1) return;
-        const interval = setInterval(() => {
-            setSelectedImage((prev) => (prev + 1) % product.images.length);
-        }, 4500);
-        return () => clearInterval(interval);
-    }, [product, selectedImage]);
+
 
 
 
