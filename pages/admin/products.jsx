@@ -114,7 +114,7 @@ export default function AdminProducts() {
     
     // Color Picker State
     const [colorList, setColorList] = useState([]);
-    const [currentColor, setCurrentColor] = useState('#000000');
+    const [currentColor, setCurrentColor] = useState('');
 
     const [details, setDetails] = useState('');
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -157,6 +157,7 @@ export default function AdminProducts() {
         setStatus('active');
         setDisplayOrder('9999');
         setColorList([]);
+        setCurrentColor('');
         setDetails('');
         setExistingImages([]);
         setIsNewArrival(false);
@@ -592,8 +593,10 @@ export default function AdminProducts() {
                                                     </select>
                                                     {imageColors[index] !== 'default' && (
                                                         <div className="w-full mt-2 flex items-center justify-center gap-1 bg-neutral-100 py-1 rounded">
-                                                            <span className="w-3 h-3 rounded-full border border-black/10" style={{backgroundColor: imageColors[index]}}></span>
-                                                            <span className="text-[10px] font-bold text-neutral-600">{imageColors[index]}</span>
+                                                            {imageColors[index].startsWith('#') && (
+                                                                <span className="w-3 h-3 rounded-full border border-black/10" style={{backgroundColor: imageColors[index]}}></span>
+                                                            )}
+                                                            <span className="text-[10px] font-bold text-neutral-600 uppercase tracking-wider">{imageColors[index].startsWith('#') ? getColorName(imageColors[index]) : imageColors[index]}</span>
                                                         </div>
                                                     )}
                                                 </div>
@@ -603,19 +606,37 @@ export default function AdminProducts() {
                                 </div>
 
                                 <div className="border-t border-neutral-200 pt-6">
-                                    <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2">Colors (Select & Add)</label>
+                                    <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2">Colors (Enter Name & Add)</label>
                                     <div className="flex gap-4 items-center">
-                                        <input type="color" value={currentColor} onChange={(e) => setCurrentColor(e.target.value)} className="h-12 w-12 rounded cursor-pointer border-0 p-0" />
-                                        <button type="button" onClick={() => {
-                                            if (!colorList.includes(currentColor)) setColorList([...colorList, currentColor]);
-                                        }} className="px-4 py-2 bg-neutral-200 hover:bg-neutral-300 text-sm font-bold rounded">Add Color</button>
+                                        <input 
+                                            type="text" 
+                                            value={currentColor} 
+                                            onChange={(e) => setCurrentColor(e.target.value)} 
+                                            placeholder="e.g. Red, Blue, White" 
+                                            className="block w-64 rounded-md border-0 py-2.5 px-4 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm bg-neutral-50 font-medium" 
+                                        />
+                                        <button 
+                                            type="button" 
+                                            onClick={() => {
+                                                const trimmed = currentColor.trim();
+                                                if (trimmed && !colorList.includes(trimmed)) {
+                                                    setColorList([...colorList, trimmed]);
+                                                    setCurrentColor('');
+                                                }
+                                            }} 
+                                            className="px-6 py-2.5 bg-black hover:bg-neutral-800 text-white text-sm font-bold rounded uppercase tracking-wider transition-colors"
+                                        >
+                                            Add Color
+                                        </button>
                                     </div>
                                     {colorList.length > 0 && (
                                         <div className="flex flex-wrap gap-3 mt-4">
                                             {colorList.map((c, i) => (
                                                 <div key={i} className="flex items-center gap-2 bg-neutral-50 p-2 rounded-md border border-neutral-200">
-                                                    <span className="w-5 h-5 rounded-full border border-black/10" style={{backgroundColor: c}}></span>
-                                                    <span className="text-xs font-mono font-bold uppercase">{c}</span>
+                                                    {c.startsWith('#') && (
+                                                        <span className="w-5 h-5 rounded-full border border-black/10" style={{backgroundColor: c}}></span>
+                                                    )}
+                                                    <span className="text-xs font-bold uppercase tracking-wider">{c.startsWith('#') ? getColorName(c) : c}</span>
                                                     <button type="button" onClick={() => {
                                                         setColorList(colorList.filter(color => color !== c));
                                                     }} className="text-red-500 hover:text-red-700 ml-1">
