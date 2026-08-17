@@ -14,7 +14,8 @@ export default function AdminCategories() {
         name: '',
         status: 'active',
         menu: 'women',
-        size_status: true
+        size_status: true,
+        display_order: '9999'
     });
     const [editCategory, setEditCategory] = useState(null);
     const router = useRouter();
@@ -62,7 +63,7 @@ export default function AdminCategories() {
             
             if (response.data.is_success) {
                 alert(editCategory ? 'Category updated successfully!' : 'Category added successfully!');
-                setFormData({ name: '', status: 'active', menu: 'women', size_status: true });
+                setFormData({ name: '', status: 'active', menu: 'women', size_status: true, display_order: '9999' });
                 setEditCategory(null);
                 setIsModalOpen(false);
                 fetchCategories();
@@ -85,7 +86,7 @@ export default function AdminCategories() {
                 <h2 className="text-lg font-black tracking-tight text-neutral-900 uppercase">All Categories</h2>
                 <button 
                     onClick={() => {
-                        setFormData({ name: '', status: 'active', menu: 'women', size_status: true });
+                        setFormData({ name: '', status: 'active', menu: 'women', size_status: true, display_order: '9999' });
                         setEditCategory(null);
                         setIsModalOpen(true);
                     }}
@@ -113,6 +114,7 @@ export default function AdminCategories() {
                                     <th scope="col" className="py-4 pl-6 pr-3 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Category Name</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Menu</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Order</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Sizes Enabled</th>
                                     <th scope="col" className="px-3 py-4 text-left text-xs font-bold text-neutral-500 uppercase tracking-wider">Added On</th>
                                     <th scope="col" className="relative py-4 pl-3 pr-6 text-right text-xs font-bold text-neutral-500 uppercase tracking-wider">Actions</th>
@@ -136,6 +138,9 @@ export default function AdminCategories() {
                                                 {cat.status}
                                             </span>
                                         </td>
+                                        <td className="whitespace-nowrap px-3 py-4 text-sm text-neutral-900 font-black">
+                                            {cat.display_order !== undefined ? cat.display_order : '9999'}
+                                        </td>
                                         <td className="whitespace-nowrap px-3 py-4 text-sm">
                                             <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider ${
                                                 cat.size_status === false ? 'bg-amber-100 text-amber-800' : 'bg-pink-100 text-pink-800'
@@ -154,7 +159,8 @@ export default function AdminCategories() {
                                                         name: cat.name,
                                                         status: cat.status,
                                                         menu: cat.menu || 'women',
-                                                        size_status: cat.size_status !== false
+                                                        size_status: cat.size_status !== false,
+                                                        display_order: cat.display_order !== undefined ? String(cat.display_order) : '9999'
                                                     });
                                                     setIsModalOpen(true);
                                                 }}
@@ -206,6 +212,10 @@ export default function AdminCategories() {
                                         <option value="active">Active</option>
                                         <option value="inactive">Inactive</option>
                                     </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2">Display Order</label>
+                                    <input type="number" name="display_order" value={formData.display_order} onChange={handleChange} placeholder="e.g. 1" className="block w-full rounded-md border-0 py-3 px-4 text-neutral-900 ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm transition-all bg-neutral-50 font-mono" />
                                 </div>
                                 <div>
                                     <label className="block text-xs font-bold text-neutral-500 uppercase tracking-widest mb-2">Sizes Enabled</label>

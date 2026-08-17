@@ -177,28 +177,31 @@ export default function Products() {
                     </div>
                 </div>
 
-                {/* Horizontal Circle Product Navigation Slider */}
-                {products.length > 0 && (
+                {/* Horizontal Circle Category Navigation Slider */}
+                {filteredCategories.length > 0 && (
                     <div className="bg-white border-b border-neutral-200 py-6 px-4 sm:px-6 lg:px-8">
                         <div className="max-w-7xl mx-auto">
                             <div className="flex overflow-x-auto gap-6 py-2 select-none scrollbar-none scroll-smooth">
-                                {products.map((prod) => (
-                                    <Link 
-                                        key={prod.id} 
-                                        href={`/products/${prod.id}`}
-                                        className="flex flex-col items-center shrink-0 w-24 group"
+                                {filteredCategories.map((cat) => (
+                                    <button 
+                                        key={cat.id} 
+                                        onClick={() => {
+                                            setActiveCategory(cat);
+                                            setSearchQuery(''); // Reset search query when category is selected
+                                        }}
+                                        className="flex flex-col items-center shrink-0 w-24 group focus:outline-none"
                                     >
-                                        <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-neutral-200 group-hover:border-pink-500 group-hover:scale-105 transition-all duration-300 shadow-sm relative p-0.5 bg-white">
+                                        <div className={`w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 group-hover:border-pink-500 group-hover:scale-105 transition-all duration-300 shadow-sm relative p-0.5 bg-white ${activeCategory && activeCategory.id === cat.id ? 'border-pink-500 scale-105' : 'border-neutral-200'}`}>
                                             <img 
-                                                src={prod.images && prod.images.length > 0 ? formatImageUrl(prod.images[0]?.url) : 'https://via.placeholder.com/100'} 
-                                                alt="" 
+                                                src={getCategoryImage(cat)} 
+                                                alt={cat.name} 
                                                 className="w-full h-full object-cover rounded-full" 
                                             />
                                         </div>
-                                        <p className="text-[10px] font-bold text-neutral-600 mt-2 text-center group-hover:text-black transition-colors max-w-full truncate px-1">
-                                            {prod.title}
+                                        <p className={`text-[10px] font-bold mt-2 text-center group-hover:text-black transition-colors max-w-full truncate px-1 uppercase tracking-wider ${activeCategory && activeCategory.id === cat.id ? 'text-pink-600 font-extrabold' : 'text-neutral-600'}`}>
+                                            {cat.name}
                                         </p>
-                                    </Link>
+                                    </button>
                                 ))}
                             </div>
                         </div>
